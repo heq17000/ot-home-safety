@@ -1,0 +1,5051 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="작업치료 관점에서 관절염, 치매, 휠체어 사용 척수손상 환자의 주거환경개선과 베리어프리를 배우는 틀린그림찾기 게임">
+<meta name="theme-color" content="#174832">
+<link rel="preload" as="image" href="title_hero_ot_home_modification.webp">
+<link rel="preload" as="image" href="entry_apartment_external_ot_before.webp">
+<title>작업치료 주거환경 개선 틀린그림찾기</title>
+<style>
+  :root {
+    --ink: #15242b;
+    --muted: #43545c;
+    --line: #c8d7d0;
+    --green: #2f6b4f;
+    --green-dark: #174832;
+    --orange: #d98445;
+    --red: #d54b42;
+    --surface: #f7faf7;
+    --soft: #eaf4ee;
+    --shadow: 0 18px 48px rgba(25, 42, 47, 0.13);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Pretendard", "Noto Sans KR", "SUIT", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0;
+    background: linear-gradient(135deg, #e6f0ea 0%, #f2ead8 100%);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button { font: inherit; cursor: pointer; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  .app {
+    width: min(1220px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 24px 0 34px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(247,250,247,0.92);
+    box-shadow: 0 8px 24px rgba(25,42,47,0.06);
+  }
+
+  .brand strong {
+    display: block;
+    color: var(--green-dark);
+    font-size: 1.12rem;
+  }
+
+  .brand span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .pill {
+    border: 1px solid #c6d8cf;
+    border-radius: 999px;
+    padding: 8px 12px;
+    color: var(--green-dark);
+    background: var(--soft);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .screen.active {
+    animation: screenFade 0.22s ease-out;
+  }
+
+  body.screen-shift .screen.active {
+    opacity: 0.55;
+    transform: scale(0.992);
+    transition: opacity 0.14s ease, transform 0.14s ease;
+  }
+
+  .cover {
+    position: relative;
+    margin: 12px 0 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background:
+      linear-gradient(135deg, rgba(8,38,27,0.92), rgba(32,84,61,0.82)),
+      var(--surface);
+    box-shadow: 0 22px 58px rgba(16,45,35,0.22);
+  }
+
+  .cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 72% 54%, rgba(255,207,61,0.18), rgba(255,207,61,0) 23%),
+      linear-gradient(90deg, rgba(4,21,14,0.84) 0%, rgba(4,21,14,0.58) 42%, rgba(4,21,14,0.12) 100%),
+      linear-gradient(180deg, rgba(4,21,14,0.06) 0%, rgba(4,21,14,0.72) 100%);
+  }
+
+  .top-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .mini-nav {
+    min-height: 36px;
+    border: 1px solid #cfe0d7;
+    border-radius: 999px;
+    background: rgba(244,248,245,0.84);
+    color: var(--green-dark);
+    padding: 7px 12px;
+    font-weight: 900;
+    box-shadow: 0 6px 14px rgba(25,42,47,0.06);
+  }
+
+  .cover img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 6.4;
+    max-height: 520px;
+    object-fit: cover;
+    object-position: center center;
+    background: #edf4f0;
+    filter: saturate(1.04) contrast(1.03);
+  }
+
+  .cover-game-ui {
+    position: absolute;
+    z-index: 1;
+    inset: 18px 18px auto auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    color: white;
+    pointer-events: none;
+  }
+
+  .cover-score {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255,255,255,0.38);
+    border-radius: 999px;
+    background: rgba(8,38,27,0.64);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.18);
+    backdrop-filter: blur(14px);
+    padding: 8px 12px;
+    font-weight: 1000;
+  }
+
+  .cover-score span {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fff6bf, #ffbf3e);
+    color: #3d2a00;
+    box-shadow: 0 0 0 4px rgba(255,207,61,0.22);
+  }
+
+  .cover-mission-card {
+    width: min(300px, 34vw);
+    border: 1px solid rgba(255,255,255,0.32);
+    border-radius: 16px;
+    background: rgba(255,253,244,0.86);
+    color: var(--green-dark);
+    box-shadow: 0 18px 36px rgba(0,0,0,0.22);
+    backdrop-filter: blur(16px);
+    padding: 12px;
+  }
+
+  .cover-mission-card strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+  }
+
+  .cover-mission-card p {
+    margin: 0;
+    color: #53666d;
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.45;
+    word-break: keep-all;
+  }
+
+  .cover-target {
+    position: absolute;
+    z-index: 1;
+    width: 44px;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    border: 3px solid rgba(255,238,143,0.96);
+    background: radial-gradient(circle, rgba(47,107,79,0.92) 0 18%, rgba(247,250,247,0.92) 19% 31%, rgba(255,207,61,0.22) 32% 100%);
+    box-shadow: 0 0 0 5px rgba(255,255,255,0.22), 0 0 22px rgba(255,207,61,0.52);
+    pointer-events: none;
+  }
+
+  .cover-target::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    border: 1px solid rgba(255,238,143,0.44);
+    border-radius: inherit;
+    animation: nextReadyRing 1.55s ease-out infinite;
+  }
+
+  .cover-target.one { left: 47%; top: 69%; }
+  .cover-target.two { left: 57%; top: 61%; animation-delay: 0.18s; }
+  .cover-target.three { left: 77%; top: 69%; animation-delay: 0.36s; }
+
+  .cover-flow-strip {
+    position: absolute;
+    z-index: 1;
+    left: 18px;
+    top: 18px;
+    display: flex;
+    gap: 7px;
+    pointer-events: none;
+  }
+
+  .cover-flow-strip span {
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.16);
+    color: rgba(247,250,247,0.92);
+    backdrop-filter: blur(12px);
+    padding: 6px 9px;
+    font-size: 0.76rem;
+    font-weight: 900;
+  }
+
+  .cover-copy {
+    position: absolute;
+    z-index: 1;
+    inset: auto 18px 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    padding: 0;
+    color: white;
+  }
+
+  .cover-copy h1 {
+    margin: 0;
+    color: white;
+    font-size: clamp(1.35rem, 2.7vw, 2.12rem);
+    line-height: 1.22;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .info-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(247,250,247,0.92);
+    box-shadow: 0 12px 32px rgba(25,42,47,0.08);
+    padding: 18px;
+  }
+
+  .info-card .icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: #e8f5ed;
+    font-size: 1.45rem;
+  }
+
+  .info-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 1.15rem;
+  }
+
+  .info-card p {
+    margin: 0;
+    color: #34484f;
+    line-height: 1.75;
+    word-break: keep-all;
+  }
+
+  .cover-copy p {
+    margin: 8px 0 0;
+    max-width: 620px;
+    color: rgba(247,250,247,0.92);
+    line-height: 1.55;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.22);
+  }
+
+  .mission-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.36);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.16);
+    color: white;
+    padding: 7px 11px;
+    font-weight: 900;
+    backdrop-filter: blur(12px);
+  }
+
+  .ot-brief {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .ot-brief-card {
+    border: 1px solid rgba(47,107,79,0.18);
+    border-radius: 16px;
+    background: rgba(247,250,247,0.94);
+    box-shadow: 0 12px 32px rgba(25,42,47,0.08);
+    padding: 18px;
+  }
+
+  .ot-brief-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 1.22rem;
+  }
+
+  .ot-brief-card p {
+    margin: 0;
+    color: #34484f;
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  .ot-brief-steps {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .ot-brief-step {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #dbe8e1;
+    border-radius: 12px;
+    background: #eef5f1;
+    padding: 9px 10px;
+    color: var(--green-dark);
+    font-weight: 850;
+    line-height: 1.4;
+  }
+
+  .ot-brief-step b {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    background: var(--green);
+    color: white;
+  }
+
+  .choice-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .choice-card {
+    position: relative;
+    min-height: 160px;
+    text-align: left;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(247,250,247,0.92);
+    box-shadow: 0 12px 32px rgba(25,42,47,0.08);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .choice-card.active {
+    border-color: var(--green);
+    border-left: 8px solid var(--green);
+    background: #e8f2ec;
+    box-shadow: 0 0 0 4px rgba(47,107,79,0.2), 0 16px 34px rgba(25,42,47,0.11);
+    transform: translateY(-2px);
+  }
+
+  .choice-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 1.2rem;
+  }
+
+  .choice-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .choice-card.with-image {
+    padding: 0;
+  }
+
+  .choice-card.with-image img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #edf4f0;
+  }
+
+  .choice-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .choice-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .select-badge {
+    border: 1px solid #c6d8cf;
+    border-radius: 999px;
+    padding: 7px 10px;
+    background: #f1f6f2;
+    color: var(--muted);
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .choice-card.active .select-badge {
+    border-color: var(--green);
+    background: var(--green);
+    color: white;
+  }
+
+  .selection-help {
+    border: 1px solid #d7e4dc;
+    border-left: 8px solid var(--orange);
+    border-radius: 12px;
+    background: #f1e7d4;
+    padding: 14px 16px;
+    color: #34484f;
+    line-height: 1.6;
+    font-weight: 800;
+  }
+
+  .selection-help strong {
+    color: var(--green-dark);
+  }
+
+  .house-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    padding: 10px 14px;
+    background: var(--green);
+    color: white;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .btn.secondary {
+    background: #f1f6f2;
+    color: var(--green-dark);
+    border-color: #bfd2c8;
+  }
+
+  .btn.soft {
+    background: #eaf4ee;
+    color: var(--green-dark);
+    border-color: #c8d9d1;
+  }
+
+  .btn.next-ready {
+    position: relative;
+    border-color: #ffd666;
+    background: linear-gradient(135deg, #ffd95b, #ff9d3f);
+    color: #402600;
+    box-shadow: 0 0 0 4px rgba(255,215,91,0.28), 0 12px 24px rgba(140,74,0,0.2);
+    animation: nextReadyGlow 1.35s ease-in-out infinite;
+  }
+
+  .btn.next-ready::after {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border: 2px solid rgba(255,218,91,0.42);
+    border-radius: inherit;
+    pointer-events: none;
+    animation: nextReadyRing 1.35s ease-out infinite;
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    box-shadow: none;
+  }
+
+  .section-title {
+    margin: 20px 0 12px;
+  }
+
+  .section-title h2 {
+    margin: 0;
+    color: var(--green-dark);
+    font-size: 1.32rem;
+  }
+
+  .section-title p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .asset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .asset-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(247,250,247,0.92);
+    box-shadow: 0 10px 28px rgba(25,42,47,0.08);
+  }
+
+  .asset-card h3 {
+    margin: 0;
+    padding: 11px 12px 0;
+    color: var(--green-dark);
+    font-size: 1rem;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    padding: 10px;
+  }
+
+  .compare figure {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #eef4f1;
+  }
+
+  .compare img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .compare figcaption {
+    padding: 7px 8px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .floor-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .floor-card, .stage-card, .side, .result-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(247,250,247,0.92);
+    box-shadow: var(--shadow);
+  }
+
+  .external-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .floor-head, .stage-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .floor-head strong, .stage-head strong {
+    color: var(--green-dark);
+  }
+
+  .mobile-hint-button {
+    display: none;
+    min-height: 36px;
+    border: 1px solid #f1c275;
+    border-radius: 999px;
+    background: #fff3d8;
+    color: #7a4a0b;
+    font-weight: 900;
+    padding: 7px 11px;
+  }
+
+  .mobile-hint-button::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-right: 7px;
+    border-radius: 999px;
+    background: #ffcf3d;
+    box-shadow: 0 0 0 4px rgba(255,207,61,0.22), 0 0 14px rgba(255,196,45,0.82);
+  }
+
+  .floor-map {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0 0 12px 12px;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .room-label {
+    position: absolute;
+    min-width: 76px;
+    min-height: 36px;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255,255,255,0.95);
+    border-radius: 999px;
+    background: rgba(47,107,79,0.92);
+    color: white;
+    font-weight: 900;
+    box-shadow: 0 8px 20px rgba(20,30,34,0.2);
+  }
+
+  .room-label.done {
+    background: rgba(217,132,69,0.94);
+  }
+
+  .side {
+    padding: 18px;
+  }
+
+  .side h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 1.18rem;
+  }
+
+  .side p {
+    margin: 0 0 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .room-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin: 18px 0;
+  }
+
+  .room-tab {
+    min-height: 44px;
+    border: 1px solid #c8d9d1;
+    border-radius: 10px;
+    background: rgba(244,248,245,0.84);
+    color: var(--green-dark);
+    font-weight: 900;
+  }
+
+  .room-tab.active {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+  }
+
+  .game-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0 0 12px 12px;
+    background-size: contain;
+    background-position: center;
+    background-color: #071c14;
+    cursor: crosshair;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    scroll-margin-top: 10px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.36);
+  }
+
+  .scene-layer {
+    position: absolute;
+    inset: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #071c14;
+    pointer-events: none;
+    transition: opacity 2s ease;
+  }
+
+  .scene-before {
+    opacity: 1;
+  }
+
+  .scene-after {
+    opacity: 0;
+  }
+
+  .stage.after-view .scene-after {
+    opacity: 1;
+  }
+
+  .stage.after-view .scene-before {
+    opacity: 0;
+  }
+
+  .stage.after-view {
+    cursor: default;
+  }
+
+  .stage.after-view .spot {
+    opacity: 0;
+  }
+
+  .ot-game-tip {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 4;
+    border: 1px solid rgba(255,255,255,0.42);
+    border-radius: 14px;
+    background: rgba(255,253,244,0.88);
+    color: var(--green-dark);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.16);
+    backdrop-filter: blur(14px);
+    padding: 10px 12px;
+    cursor: pointer;
+    pointer-events: auto;
+    text-align: left;
+  }
+
+  .ot-game-tip::after {
+    content: "자세히";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: 1px solid rgba(47,107,79,0.2);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.76);
+    color: var(--green-dark);
+    padding: 3px 7px;
+    font-size: 0.68rem;
+    font-weight: 900;
+  }
+
+  .ot-game-tip:hover {
+    background: rgba(255,253,244,0.96);
+    box-shadow: 0 0 0 3px rgba(255,207,61,0.22), 0 14px 30px rgba(0,0,0,0.16);
+  }
+
+  .ot-game-tip strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+    font-size: 0.9rem;
+    font-weight: 1000;
+  }
+
+  .ot-game-tip strong::before {
+    content: "OT";
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--green);
+    color: white;
+    font-size: 0.72rem;
+  }
+
+  .ot-game-tip span {
+    display: block;
+    color: #34484f;
+    font-size: 0.84rem;
+    font-weight: 800;
+    line-height: 1.45;
+    word-break: keep-all;
+  }
+
+  .stage.after-view + .ot-game-tip {
+    display: none;
+  }
+
+  .stage-complete {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 3;
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: 12px;
+    background: rgba(23,72,50,0.9);
+    color: white;
+    padding: 12px 14px;
+    font-weight: 900;
+    line-height: 1.45;
+    box-shadow: 0 14px 32px rgba(20,30,34,0.18);
+  }
+
+  .stage-complete strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.02rem;
+  }
+
+  .stage-complete span {
+    display: block;
+    font-weight: 700;
+    opacity: 0.94;
+  }
+
+  .ot-result-note {
+    margin-top: 12px;
+    border-left: 5px solid var(--green);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f2fbf6, #fff8db);
+    padding: 12px 14px;
+    color: var(--green-dark);
+    font-weight: 800;
+    line-height: 1.6;
+  }
+
+  .ot-result-note strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.02rem;
+  }
+
+  .spot {
+    position: absolute;
+    z-index: 2;
+    width: 52px;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+    pointer-events: none;
+  }
+
+  .spot.found {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .spot.found::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: clamp(14px, 1.8vw, 20px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    border: 2px solid rgba(47,107,79,0.96);
+    background: rgba(47,107,79,0.08);
+    box-shadow: 0 0 0 2px rgba(247,250,247,0.92), 0 4px 10px rgba(20,30,34,0.12), 0 0 14px rgba(47,107,79,0.34);
+  }
+
+  .spot.found::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background: rgba(47,107,79,0.95);
+  }
+
+  .spot:focus-visible {
+    outline: 3px solid rgba(47,107,79,0.6);
+    outline-offset: 3px;
+  }
+
+  .stage.coord-mode .spot {
+    width: 32px;
+    border: 2px solid rgba(255,207,61,0.95);
+    background: rgba(255,207,61,0.22);
+    box-shadow: 0 0 0 3px rgba(247,250,247,0.92), 0 0 18px rgba(255,207,61,0.72);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .stage.coord-mode .spot::before,
+  .stage.coord-mode .spot::after {
+    display: none;
+  }
+
+  .coord-label {
+    position: absolute;
+    left: 50%;
+    top: -22px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: rgba(23,72,50,0.96);
+    color: white;
+    padding: 3px 7px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .coord-readout {
+    position: absolute;
+    z-index: 12;
+    transform: translate(-50%, -100%);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 999px;
+    background: rgba(23,72,50,0.94);
+    color: white;
+    padding: 5px 9px;
+    font-size: 0.76rem;
+    font-weight: 900;
+    pointer-events: none;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+  }
+
+  .hint-list {
+    display: grid;
+    gap: 8px;
+    margin: 10px 0 14px;
+  }
+
+  .hint-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    min-height: 40px;
+    text-align: left;
+    border: 1px solid #d9e4df;
+    border-radius: 8px;
+    padding: 9px 11px;
+    background: #f3eee2;
+    color: var(--green-dark);
+    font-weight: 800;
+    line-height: 1.4;
+  }
+
+  .hint-item.done {
+    background: #eaf4ee;
+    color: #6a7a72;
+    text-decoration: line-through;
+  }
+
+  .hint-item small {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #e3efe8;
+    color: var(--green-dark);
+    padding: 4px 8px;
+    font-size: 0.76rem;
+    text-decoration: none;
+  }
+
+  .hint-pulse {
+    position: absolute;
+    z-index: 3;
+    width: clamp(108px, 12vw, 156px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    border: 4px solid rgba(255,208,61,0.96);
+    background: radial-gradient(circle, rgba(244,248,245,0.84) 0%, rgba(255,235,122,0.58) 34%, rgba(255,190,55,0.24) 64%, rgba(255,214,132,0) 82%);
+    filter: blur(0.4px);
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.88), 0 0 22px rgba(255,198,43,0.72), 0 0 46px rgba(217,132,69,0.42);
+    pointer-events: none;
+    animation: hintPulse 2.45s ease-out forwards;
+  }
+
+  .hint-pulse::after {
+    content: "여기 확인";
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    transform: translate(-50%, -100%);
+    border: 1px solid rgba(255,219,88,0.72);
+    border-radius: 999px;
+    background: rgba(31,35,22,0.92);
+    color: #fff4b8;
+    box-shadow: 0 8px 18px rgba(20,30,34,0.22), 0 0 18px rgba(255,207,61,0.44);
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  @keyframes hintPulse {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.72); }
+    15% { opacity: 1; }
+    50% { opacity: 0.88; transform: translate(-50%, -50%) scale(1.02); }
+    82% { opacity: 0.6; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.24); }
+  }
+
+  .wrong {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(213,75,66,0.92);
+    color: white;
+    font-weight: 900;
+    pointer-events: none;
+  }
+
+  .found-list, .progress-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  .found-item, .progress-item {
+    padding: 10px 12px;
+    border: 1px solid #d9e4df;
+    border-radius: 8px;
+    background: #f8fbf8;
+    line-height: 1.55;
+  }
+
+  .found-item strong, .progress-item strong {
+    color: var(--green-dark);
+  }
+
+  .empty {
+    padding: 12px;
+    border-radius: 8px;
+    background: #f0e5d3;
+    color: #7a5a35;
+    line-height: 1.6;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 18px;
+    align-items: start;
+    margin-top: 18px;
+  }
+
+  .result-card {
+    padding: 18px;
+  }
+
+  .result-card h2 {
+    margin: 0 0 10px;
+    color: var(--green-dark);
+  }
+
+  .result-card p {
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .result-dashboard {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .score-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #eef5fb;
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+
+  .ot-report-card {
+    border: 1px solid rgba(47,107,79,0.24);
+    border-radius: 12px;
+    background:
+      linear-gradient(135deg, #f7faf7, #eaf4ee),
+      radial-gradient(circle at 100% 0%, rgba(217,132,69,0.16), transparent 36%);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+
+  .ot-report-card h2,
+  .score-card h2, .urgent-card h2, .missed-card h2, .checklist-card h2, .survey-link-card h2, .instagram-card h2 {
+    margin: 0 0 14px;
+    color: var(--green-dark);
+  }
+
+  .ot-report-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .ot-report-item {
+    border: 1px solid #d9e7df;
+    border-radius: 12px;
+    background: rgba(244,248,245,0.84);
+    padding: 13px;
+    line-height: 1.55;
+  }
+
+  .ot-report-item small {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--muted);
+    font-weight: 900;
+  }
+
+  .ot-report-item strong {
+    color: var(--green-dark);
+    font-size: 1.02rem;
+  }
+
+  .ot-report-message {
+    margin-top: 12px;
+    border-left: 5px solid var(--orange);
+    border-radius: 12px;
+    background: #f0e4cf;
+    padding: 12px 14px;
+    color: #5c4a2d;
+    line-height: 1.65;
+    font-weight: 800;
+  }
+
+  .score-row {
+    display: grid;
+    grid-template-columns: 116px minmax(0, 1fr) 76px 54px;
+    gap: 12px;
+    align-items: center;
+    margin: 10px 0;
+  }
+
+  .score-room {
+    font-weight: 900;
+    color: var(--green-dark);
+  }
+
+  .bar-track {
+    height: 24px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #d9e5df;
+  }
+
+  .bar-fill {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    min-width: 38px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #45ad5b, #64c86f);
+    color: white;
+    font-weight: 900;
+    font-size: 0.84rem;
+  }
+
+  .score-status {
+    font-weight: 900;
+    color: #40534a;
+  }
+
+  .urgent-card, .missed-card, .checklist-card, .survey-link-card, .instagram-card {
+    border: 1px solid #f0dfb7;
+    border-radius: 12px;
+    background: #f2e5bc;
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+
+  .missed-card {
+    border-color: #d7e4dc;
+    background: #eef5f1;
+  }
+
+  .result-summary-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .result-side-stack {
+    display: grid;
+    gap: 14px;
+  }
+
+  .survey-link-card {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    border-color: #d7e4dc;
+    background: #eef5f1;
+  }
+
+  .survey-link-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: #e6f3ec;
+    color: var(--green-dark);
+    font-weight: 900;
+    font-size: 1.25rem;
+  }
+
+  .survey-link-card p {
+    margin: 0;
+    color: #40534a;
+    line-height: 1.5;
+  }
+
+  .survey-link-card .btn[disabled] {
+    opacity: 0.72;
+    cursor: default;
+  }
+
+  .instagram-card {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    border-color: #d7e4dc;
+    background: #eef5f1;
+  }
+
+  .instagram-card img {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    box-shadow: 0 8px 18px rgba(40,32,52,0.16);
+  }
+
+  .instagram-card p {
+    margin: 0;
+    color: #40534a;
+    line-height: 1.5;
+  }
+
+  .instagram-card .handle {
+    display: inline-block;
+    margin-top: 4px;
+    color: var(--green-dark);
+    font-weight: 900;
+  }
+
+  .result-detail-card {
+    border: 1px solid #d7e4dc;
+    border-radius: 12px;
+    background: rgba(247,250,247,0.94);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .result-detail-card summary {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 18px;
+    color: var(--green-dark);
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .result-detail-card summary::after {
+    content: "+";
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: #e3efe8;
+  }
+
+  .result-detail-card[open] summary::after {
+    content: "-";
+  }
+
+  .result-detail-body {
+    padding: 0 18px 18px;
+  }
+
+  .urgent-list, .missed-list, .checklist {
+    display: grid;
+    gap: 10px;
+  }
+
+  .missed-card p {
+    margin: -4px 0 14px;
+    color: #40534a;
+    line-height: 1.6;
+  }
+
+  .missed-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #d7e4dc;
+    border-radius: 8px;
+    background: white;
+    padding: 12px;
+  }
+
+  .missed-item strong {
+    display: block;
+    color: var(--green-dark);
+  }
+
+  .missed-item span {
+    display: block;
+    margin-top: 3px;
+    color: #40534a;
+    line-height: 1.45;
+  }
+
+  .mini-btn {
+    min-height: 38px;
+    border: 1px solid #c9dcd1;
+    border-radius: 8px;
+    background: #e3efe8;
+    color: var(--green-dark);
+    font-weight: 900;
+    padding: 8px 12px;
+  }
+
+  .urgent-item {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(170,130,60,0.24);
+  }
+
+  .rank {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: #d23b35;
+    color: white;
+    font-weight: 900;
+  }
+
+  .urgent-item:nth-child(n+4) .rank {
+    background: #ed8a22;
+  }
+
+  .urgent-item strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1.05rem;
+  }
+
+  .urgent-item span {
+    display: block;
+    margin-top: 4px;
+    color: #40534a;
+    line-height: 1.45;
+  }
+
+  .check-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border: 1px solid rgba(170,130,60,0.28);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.48);
+    line-height: 1.55;
+  }
+
+  .check-item input {
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    accent-color: var(--green);
+  }
+
+  .share-note {
+    min-height: 22px;
+    color: var(--green-dark);
+    font-weight: 800;
+  }
+
+  .result-hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: center;
+    border: 1px solid #d8e6dd;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f7faf7, #e3efe8);
+    box-shadow: var(--shadow);
+    padding: 20px;
+  }
+
+  .result-hero h1 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+  }
+
+  .result-hero p {
+    margin: 0;
+    color: #34484f;
+    line-height: 1.65;
+  }
+
+  .score-badge {
+    display: grid;
+    place-items: center;
+    width: 118px;
+    height: 118px;
+    border-radius: 999px;
+    background: var(--green);
+    color: white;
+    font-weight: 900;
+    box-shadow: 0 12px 28px rgba(47,107,79,0.25);
+  }
+
+  .score-badge strong {
+    display: block;
+    font-size: 2rem;
+  }
+
+  @media (max-width: 560px) {
+    .score-row {
+      grid-template-columns: 82px minmax(0, 1fr) 48px;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+
+    .score-status {
+      grid-column: 2 / 4;
+      margin-top: -6px;
+      font-size: 0.8rem;
+    }
+
+    .survey-link-icon {
+      width: 52px;
+      height: 52px;
+    }
+
+    .result-detail-card summary {
+      padding: 0 14px;
+    }
+
+    .result-detail-body {
+      padding: 0 12px 12px;
+    }
+  }
+
+  .learn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .learn-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 18px;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(247,250,247,0.94);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  .learn-hero img {
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    object-position: center right;
+  }
+
+  .learn-hero-copy {
+    padding: 22px;
+  }
+
+  .learn-hero-copy h2 {
+    margin: 0 0 10px;
+    color: var(--green-dark);
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+  }
+
+  .learn-hero-copy p {
+    margin: 0;
+    color: #34484f;
+    line-height: 1.75;
+    word-break: keep-all;
+  }
+
+  .learn-card {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(247,250,247,0.94);
+    box-shadow: 0 12px 32px rgba(25,42,47,0.08);
+    padding: 18px;
+  }
+
+  .learn-card h2 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+  }
+
+  .learn-card p, .learn-card li {
+    color: #34484f;
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  .learn-card ul {
+    margin: 10px 0 0;
+    padding-left: 20px;
+  }
+
+  .learn-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 10px;
+    font-size: 0.94rem;
+  }
+
+  .learn-table th, .learn-table td {
+    border: 1px solid #d9e4df;
+    padding: 10px;
+    vertical-align: top;
+    text-align: left;
+    line-height: 1.55;
+  }
+
+  .learn-table th {
+    background: #e3efe8;
+    color: var(--green-dark);
+    font-weight: 900;
+  }
+
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .resource-card {
+    position: relative;
+    min-height: 178px;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 14px;
+    border: 1px solid rgba(47,107,79,0.22);
+    border-radius: 16px;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--green-dark);
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.96), rgba(242,250,246,0.94)),
+      radial-gradient(circle at 100% 0%, rgba(217,132,69,0.16), transparent 36%);
+    box-shadow: 0 12px 28px rgba(25,42,47,0.08);
+    overflow: hidden;
+  }
+
+  .resource-card:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 3px rgba(47,107,79,0.12), 0 16px 32px rgba(25,42,47,0.12);
+  }
+
+  .resource-thumb {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 76px;
+    height: 76px;
+    border: 1px solid rgba(47,107,79,0.22);
+    border-radius: 18px;
+    background: linear-gradient(135deg, #174832, #2f6b4f);
+    color: white;
+    font-size: 1rem;
+    font-weight: 1000;
+    letter-spacing: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 10px 20px rgba(25,42,47,0.12);
+  }
+
+  .resource-thumb img {
+    display: none;
+  }
+
+  .resource-thumb::after {
+    content: "공식";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: 1px solid rgba(47,107,79,0.18);
+    border-radius: 999px;
+    background: rgba(247,250,247,0.94);
+    color: var(--green-dark);
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  .resource-card > div:last-child {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .resource-card strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.04rem;
+    line-height: 1.25;
+  }
+
+  .resource-card span {
+    color: #42544c;
+    line-height: 1.5;
+    font-size: 0.9rem;
+  }
+
+  .app-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 18px 0;
+  }
+
+  .app-mode {
+    position: relative;
+    min-height: 126px;
+    border: 1px solid #d6e4dc;
+    border-radius: 16px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.98), rgba(242,250,246,0.95)),
+      radial-gradient(circle at 100% 0%, rgba(217,132,69,0.18), transparent 38%);
+    padding: 16px 14px 14px;
+    text-align: left;
+    color: var(--green-dark);
+    box-shadow: 0 10px 22px rgba(25,42,47,0.06);
+    overflow: hidden;
+  }
+
+  .app-mode::before {
+    content: "";
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: var(--green);
+    color: white;
+    box-shadow: 0 8px 16px rgba(47,107,79,0.18);
+  }
+
+  .app-mode:nth-child(1)::before { content: "1"; }
+  .app-mode:nth-child(2)::before { content: "2"; }
+  .app-mode:nth-child(3)::before { content: "3"; }
+  .app-mode:nth-child(4)::before { content: "4"; }
+
+  .app-mode:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 3px rgba(47,107,79,0.12), 0 14px 28px rgba(25,42,47,0.1);
+  }
+
+  .app-mode strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+
+  .app-mode span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  .survey-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .survey-card {
+    border: 1px solid #d8e5dd;
+    border-radius: 14px;
+    background: rgba(247,250,247,0.92);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .survey-card h2 {
+    margin-bottom: 10px;
+    color: var(--green-dark);
+  }
+
+  .survey-options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .survey-options label {
+    display: grid;
+    gap: 6px;
+    justify-items: center;
+    border: 1px solid #d4e2da;
+    border-radius: 10px;
+    background: #f3eee2;
+    padding: 10px 8px;
+    color: var(--green-dark);
+    font-weight: 900;
+  }
+
+  .survey-options input {
+    accent-color: var(--green);
+  }
+
+  .survey-textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    border: 1px solid #d4e2da;
+    border-radius: 12px;
+    padding: 12px;
+    font: inherit;
+    line-height: 1.55;
+  }
+
+  .survey-result {
+    margin-top: 12px;
+    border-radius: 12px;
+    background: #f0faf4;
+    padding: 12px;
+    color: var(--green-dark);
+    font-weight: 800;
+    line-height: 1.55;
+  }
+
+  .link-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .link-list a {
+    display: block;
+    border: 1px solid #d6e4dc;
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--green-dark);
+    background: #eef5f1;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .intro-card {
+    border: 1px solid rgba(47,107,79,0.2);
+    border-radius: 16px;
+    background: rgba(247,250,247,0.94);
+    box-shadow: var(--shadow);
+    padding: 20px;
+  }
+
+  .intro-hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .intro-panel {
+    border: 1px solid #dbe8e1;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f7fcf9, #f0e4cf);
+    padding: 16px;
+  }
+
+  .intro-panel h2 {
+    margin: 0 0 10px;
+    color: var(--green-dark);
+  }
+
+  .intro-panel p {
+    margin: 0;
+    color: #34484f;
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  .intro-steps {
+    display: grid;
+    gap: 10px;
+  }
+
+  .intro-step {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    border: 1px solid #dbe8e1;
+    border-radius: 13px;
+    background: white;
+    padding: 10px;
+  }
+
+  .intro-step b {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    background: var(--green);
+    color: white;
+  }
+
+  .intro-step strong {
+    display: block;
+    color: var(--green-dark);
+  }
+
+  .intro-step span {
+    display: block;
+    margin-top: 2px;
+    color: #42544c;
+    line-height: 1.45;
+    font-size: 0.92rem;
+  }
+
+  .intro-flow {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .intro-flow-item {
+    position: relative;
+    min-height: 76px;
+    border: 1px solid #dbe8e1;
+    border-radius: 13px;
+    background: linear-gradient(180deg, #f7faf7, #f5fbf7);
+    padding: 10px 8px;
+    text-align: center;
+    color: var(--green-dark);
+    font-weight: 900;
+    box-shadow: 0 8px 18px rgba(25,42,47,0.06);
+  }
+
+  .intro-flow-item:not(:last-child)::after {
+    content: "›";
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    z-index: 1;
+    transform: translateY(-50%);
+    color: var(--orange);
+    font-size: 1.25rem;
+    font-weight: 1000;
+  }
+
+  .intro-flow-item b {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--orange);
+    font-size: 0.78rem;
+  }
+
+  .intro-flow-item span {
+    display: block;
+    line-height: 1.3;
+    font-size: 0.84rem;
+    word-break: keep-all;
+  }
+
+  .credit {
+    margin-top: 18px;
+    border-left: 6px solid var(--green);
+    border-radius: 12px;
+    background: #efe2bf;
+    padding: 16px 18px;
+    color: #4f4a36;
+    line-height: 1.7;
+    box-shadow: 0 10px 28px rgba(25,42,47,0.08);
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    place-items: center;
+    padding: 20px;
+    background: rgba(22, 33, 38, 0.56);
+    z-index: 10;
+  }
+
+  .modal-backdrop.active { display: grid; }
+
+  .modal {
+    width: min(560px, 100%);
+    max-height: min(82vh, 680px);
+    overflow: auto;
+    border-radius: 12px;
+    background: white;
+    box-shadow: var(--shadow);
+    padding: 22px;
+  }
+
+  .modal h2 {
+    margin: 0 0 10px;
+    color: var(--green-dark);
+  }
+
+  .modal p {
+    margin: 8px 0;
+    line-height: 1.7;
+  }
+
+  .modal-next-note {
+    display: none;
+    margin: 14px 0 12px;
+    border: 1px solid #cfe0d6;
+    border-left: 6px solid var(--green);
+    border-radius: 10px;
+    background: #e8f2ec;
+    padding: 11px 12px;
+    color: var(--green-dark);
+    font-weight: 900;
+    line-height: 1.55;
+  }
+
+  .modal-next-note.active {
+    display: block;
+  }
+
+  .hint-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: flex-end;
+    background: rgba(22,33,38,0.46);
+    z-index: 11;
+  }
+
+  .hint-sheet-backdrop.active {
+    display: flex;
+  }
+
+  .hint-sheet {
+    width: 100%;
+    max-height: 78vh;
+    overflow: auto;
+    border-radius: 18px 18px 0 0;
+    border: 1px solid rgba(255,255,255,0.68);
+    background: linear-gradient(180deg, #fffdf4 0%, #eaf4ee 100%);
+    box-shadow: 0 -16px 38px rgba(20,30,34,0.22), 0 0 28px rgba(255,207,61,0.18);
+    padding: 16px;
+  }
+
+  .hint-sheet::before {
+    content: "";
+    display: block;
+    width: 42px;
+    height: 5px;
+    margin: 0 auto 12px;
+    border-radius: 999px;
+    background: #bdd1c7;
+  }
+
+  .hint-sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .hint-sheet-head h2 {
+    margin: 0;
+    color: var(--green-dark);
+    font-size: 1.22rem;
+  }
+
+  .hint-sheet-close {
+    min-width: 68px;
+    height: 40px;
+    border: 1px solid #cbdcd3;
+    border-radius: 12px;
+    background: white;
+    color: var(--green-dark);
+    font-weight: 900;
+    padding: 0 12px;
+  }
+
+  .hint-sheet-desc {
+    margin: 0 0 12px;
+    border: 1px solid rgba(217,132,69,0.22);
+    border-radius: 10px;
+    background: #fff8e4;
+    color: #6b4a22;
+    padding: 10px 12px;
+    line-height: 1.55;
+    font-weight: 800;
+  }
+
+  @media (max-width: 940px) {
+    .app {
+      width: min(100% - 28px, 1220px);
+      padding: 10px 0 22px;
+    }
+
+    .topbar {
+      padding: 12px;
+    }
+
+    .brand strong {
+      font-size: 1rem;
+    }
+
+    .brand span {
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .choice-grid, .house-choice-grid, .asset-grid, .info-grid, .floor-layout, .external-layout, .game-layout, .result-grid, .learn-grid, .learn-hero, .resource-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .result-summary-grid,
+    .survey-link-card,
+    .instagram-card {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-flow-item {
+      min-height: auto;
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .intro-flow-item:not(:last-child)::after {
+      top: auto;
+      right: auto;
+      left: 31px;
+      bottom: -17px;
+      transform: rotate(90deg);
+      font-size: 1.1rem;
+    }
+
+    .intro-flow-item b {
+      margin: 0;
+    }
+
+    .ot-report-grid {
+      grid-template-columns: 1fr;
+    }
+
+    #profileScreen,
+    #houseScreen {
+      min-height: calc(100svh - 76px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #profileScreen:not(.active),
+    #houseScreen:not(.active) {
+      display: none !important;
+    }
+
+    #profileScreen .section-title,
+    #houseScreen .section-title {
+      margin-bottom: 0;
+    }
+
+    #profileScreen .section-title h2,
+    #houseScreen .section-title h2 {
+      font-size: 1.24rem;
+    }
+
+    #profileScreen .section-title p,
+    #houseScreen .section-title p {
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    #profileScreen .selection-help {
+      margin: 0;
+      padding: 8px 10px;
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    #profileScreen .choice-grid,
+    #houseScreen .house-choice-grid {
+      gap: 8px;
+      flex: 1 1 auto;
+      align-content: start;
+    }
+
+    #profileScreen .choice-card.with-image,
+    #houseScreen .choice-card.with-image {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 98px;
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    #profileScreen .choice-card.with-image.active,
+    #houseScreen .choice-card.with-image.active {
+      border-left-width: 8px;
+      box-shadow: 0 10px 20px rgba(47,107,79,0.15);
+    }
+
+    #profileScreen .choice-card.with-image img,
+    #houseScreen .choice-card.with-image img {
+      width: 92px;
+      height: 78px;
+      aspect-ratio: auto;
+      border-radius: 9px;
+      object-fit: cover;
+    }
+
+    #profileScreen .choice-card h2,
+    #houseScreen .choice-card h2 {
+      margin-bottom: 4px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    #profileScreen .choice-card p,
+    #houseScreen .choice-card p {
+      display: -webkit-box;
+      margin-bottom: 6px;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    #profileScreen .choice-card .choice-meta,
+    #houseScreen .choice-card .choice-meta {
+      gap: 5px;
+    }
+
+    #profileScreen .choice-card .pill,
+    #houseScreen .choice-card .pill,
+    #profileScreen .choice-card .select-badge,
+    #houseScreen .choice-card .select-badge {
+      padding: 4px 7px;
+      font-size: 0.72rem;
+    }
+
+    #profileScreen > .btn-row,
+    #houseScreen > .btn-row {
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: auto;
+      padding: 8px 0 0;
+      background: linear-gradient(180deg, rgba(248,246,238,0), rgba(248,246,238,0.96) 28%);
+    }
+
+    #profileScreen > .btn-row .btn:first-child,
+    #houseScreen > .btn-row .btn:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .app-mode-grid,
+    .survey-options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .room-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cover-copy, .floor-head {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .stage-head {
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 0;
+      background: linear-gradient(135deg, #194b34 0%, #2f6b4f 62%, #d98445 100%);
+      color: white;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.16);
+    }
+
+    .stage-head strong {
+      font-size: 1rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    }
+
+    .stage-head .pill {
+      border-color: rgba(255,255,255,0.42);
+      background: rgba(255,255,255,0.17);
+      color: white;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .result-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .cover img {
+      aspect-ratio: 16 / 9.6;
+      max-height: 56svh;
+      object-position: center center;
+    }
+
+    .cover-copy {
+      inset: auto 10px 10px 10px;
+      padding: 0;
+      gap: 10px;
+    }
+
+    .cover-game-ui {
+      top: 12px;
+      right: 12px;
+      gap: 7px;
+    }
+
+    .cover-score {
+      padding: 6px 9px;
+      font-size: 0.82rem;
+    }
+
+    .cover-score span {
+      width: 28px;
+      height: 28px;
+    }
+
+    .cover-mission-card {
+      width: min(220px, 48vw);
+      padding: 9px;
+      border-radius: 12px;
+    }
+
+    .cover-mission-card strong {
+      font-size: 0.82rem;
+    }
+
+    .cover-mission-card p {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size: 0.72rem;
+    }
+
+    .cover-flow-strip {
+      left: 12px;
+      top: 12px;
+      max-width: 48%;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .cover-flow-strip span {
+      padding: 5px 7px;
+      font-size: 0.68rem;
+    }
+
+    .cover-target {
+      width: 34px;
+      border-width: 2px;
+    }
+
+    .cover-target.one { left: 42%; top: 61%; }
+    .cover-target.two { left: 57%; top: 56%; }
+    .cover-target.three { left: 74%; top: 63%; }
+
+    .cover-copy h1 {
+      font-size: 1.18rem;
+    }
+
+    .cover-copy p {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .cover-copy .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+      gap: 8px;
+    }
+
+    .cover-copy .btn {
+      min-height: 44px;
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-size: 0.9rem;
+    }
+
+    .mission-kicker {
+      margin-bottom: 7px;
+      padding: 5px 9px;
+      font-size: 0.72rem;
+    }
+
+    .ot-brief {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .ot-brief-card {
+      padding: 14px;
+      border-radius: 13px;
+    }
+
+    .ot-brief-card h2 {
+      font-size: 1.05rem;
+    }
+
+    .ot-brief-card p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .ot-brief-step {
+      grid-template-columns: 30px minmax(0, 1fr);
+      padding: 8px;
+      font-size: 0.88rem;
+    }
+
+    .ot-brief-step b {
+      width: 30px;
+      height: 30px;
+    }
+
+    .choice-card.with-image img {
+      aspect-ratio: 16 / 10;
+    }
+
+    .learn-hero img {
+      min-height: 190px;
+      aspect-ratio: 16 / 9;
+    }
+
+    .floor-map, .stage {
+      border-radius: 0 0 10px 10px;
+    }
+
+    .stage-card, .floor-card, .side, .result-card, .cover, .choice-card, .asset-card {
+      border-radius: 10px;
+    }
+
+    .stage-card {
+      overflow: hidden;
+      border-color: rgba(23,72,50,0.32);
+      background: #102f24;
+      box-shadow: 0 18px 34px rgba(13,41,31,0.18);
+    }
+
+    .stage-head, .floor-head {
+      padding: 9px 10px;
+    }
+
+    .stage {
+      aspect-ratio: 16 / 9;
+      max-height: 42vh;
+    }
+
+    .mobile-hint-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      margin-left: auto;
+      border: 1px solid rgba(255,255,255,0.7);
+      background: linear-gradient(135deg, #fff6bf 0%, #ffd95b 46%, #ff9c3d 100%);
+      color: #553000;
+      box-shadow: 0 0 0 3px rgba(255,218,82,0.28), 0 8px 18px rgba(88,47,0,0.22), inset 0 1px 0 rgba(255,255,255,0.68);
+      letter-spacing: 0;
+      animation: hintButtonGlow 1.7s ease-in-out infinite;
+    }
+
+    .spot {
+      width: 58px;
+    }
+
+    .spot.found::before {
+      width: 14px;
+    }
+
+    .hint-pulse {
+      width: 118px;
+      border-width: 5px;
+      background: radial-gradient(circle, rgba(247,250,247,0.92) 0%, rgba(255,245,147,0.68) 32%, rgba(255,202,54,0.34) 66%, rgba(255,214,132,0) 84%);
+      box-shadow: 0 0 0 5px rgba(247,250,247,0.92), 0 0 24px rgba(255,211,51,0.88), 0 0 58px rgba(255,154,59,0.62);
+    }
+
+    .hint-pulse::after {
+      top: -8px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+
+    .hint-item {
+      min-height: 50px;
+      border-color: rgba(47,107,79,0.22);
+      border-radius: 12px;
+      background: #f7faf7;
+      color: var(--green-dark);
+      box-shadow: 0 8px 16px rgba(25,42,47,0.07);
+      font-size: 0.98rem;
+    }
+
+    .hint-item small {
+      background: #ffe8a8;
+      color: #704000;
+      font-weight: 900;
+    }
+
+    .side {
+      padding: 12px;
+    }
+
+    .external-layout, .game-layout {
+      gap: 10px;
+    }
+
+    .external-layout .side,
+    .game-layout .side {
+      border: 1px solid rgba(47,107,79,0.18);
+      background: rgba(244,248,245,0.84);
+      box-shadow: 0 10px 22px rgba(25,42,47,0.08);
+      padding: 10px;
+    }
+
+    .external-layout .side > h2:not(.hint-desktop),
+    .external-layout .side > p:not(.hint-desktop),
+    .game-layout .side > h2:not(.hint-desktop),
+    .game-layout .side > p:not(.hint-desktop) {
+      display: none;
+    }
+
+    .external-layout .side > .pill,
+    .game-layout .side > .pill {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      margin: 0 !important;
+      min-width: 58px;
+      min-height: 44px;
+      border: 1px solid rgba(47,107,79,0.28);
+      background: linear-gradient(135deg, #f7faf7, #e3efe8);
+      color: var(--green-dark);
+      font-size: 1rem;
+      box-shadow: 0 5px 12px rgba(25,42,47,0.08);
+    }
+
+    .external-layout .side .btn-row,
+    .game-layout .side .btn-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr 0.85fr;
+      gap: 6px;
+      margin-top: 0 !important;
+    }
+
+    .external-layout .side .btn-row .btn:first-child,
+    .game-layout .side .btn-row .btn:first-child {
+      grid-column: auto;
+    }
+
+    .external-layout .side .btn,
+    .game-layout .side .btn {
+      min-height: 42px;
+      border-radius: 12px;
+      padding: 7px 6px;
+      font-size: 0.78rem;
+      line-height: 1.25;
+      box-shadow: 0 8px 16px rgba(25,42,47,0.07);
+      white-space: normal;
+    }
+
+    .hint-desktop,
+    .side .hint-list,
+    .side .found-list {
+      display: none;
+    }
+
+    .side h2,
+    .side p {
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    body[data-screen="externalScreen"],
+    body[data-screen="roomScreen"] {
+      overflow: hidden;
+      background: #071c14;
+    }
+
+    body[data-screen="externalScreen"] .app,
+    body[data-screen="roomScreen"] .app {
+      width: 100%;
+      height: 100svh;
+      min-height: 100dvh;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    body[data-screen="externalScreen"] .topbar,
+    body[data-screen="roomScreen"] .topbar {
+      display: none;
+    }
+
+    body[data-screen="externalScreen"] #externalScreen,
+    body[data-screen="roomScreen"] #roomScreen {
+      height: 100svh;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #071c14;
+    }
+
+    body[data-screen="externalScreen"] .external-layout,
+    body[data-screen="roomScreen"] .game-layout {
+      display: block;
+      position: relative;
+      height: 100svh;
+      min-height: 100dvh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body[data-screen="externalScreen"] .stage-card,
+    body[data-screen="roomScreen"] .stage-card {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border: 0;
+      border-radius: 0;
+      background: #071c14;
+      box-shadow: none;
+    }
+
+    body[data-screen="externalScreen"] .stage,
+    body[data-screen="roomScreen"] .stage {
+      width: 100vw;
+      height: 100svh;
+      min-height: 100dvh;
+      max-height: none;
+      aspect-ratio: auto;
+      border-radius: 0;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(47,107,79,0.22), rgba(7,28,20,0.06) 44%, rgba(7,28,20,0.92) 100%),
+        #071c14;
+    }
+
+    body[data-screen="externalScreen"] .scene-layer,
+    body[data-screen="roomScreen"] .scene-layer {
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    body[data-screen="externalScreen"] .stage::after,
+    body[data-screen="roomScreen"] .stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(4,18,12,0.44) 0%, rgba(4,18,12,0.04) 26%, rgba(4,18,12,0.06) 58%, rgba(4,18,12,0.58) 100%);
+      pointer-events: none;
+    }
+
+    body[data-screen="externalScreen"] .stage-head,
+    body[data-screen="roomScreen"] .stage-head {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      top: calc(env(safe-area-inset-top) + 8px);
+      z-index: 8;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 13px;
+      background: rgba(14,55,38,0.66);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.18);
+      padding: 7px 8px;
+    }
+
+    body[data-screen="externalScreen"] .stage-head strong,
+    body[data-screen="roomScreen"] .stage-head strong {
+      flex: 1 1 auto;
+      min-width: 130px;
+      font-size: 0.88rem;
+    }
+
+    body[data-screen="externalScreen"] .stage-head .pill,
+    body[data-screen="roomScreen"] .stage-head .pill {
+      display: none;
+    }
+
+    body[data-screen="externalScreen"] .mobile-hint-button,
+    body[data-screen="roomScreen"] .mobile-hint-button {
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+
+    body[data-screen="roomScreen"] .room-tabs {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      top: calc(env(safe-area-inset-top) + 76px);
+      z-index: 9;
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      margin: 0;
+      padding: 7px;
+      border: 1px solid rgba(255,255,255,0.26);
+      border-radius: 999px;
+      background: rgba(12,45,32,0.58);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    }
+
+    body[data-screen="roomScreen"] .room-tab {
+      flex: 0 0 auto;
+      min-width: 60px;
+      min-height: 38px;
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.86);
+    }
+
+    body[data-screen="roomScreen"] .room-tab.active {
+      background: linear-gradient(135deg, #fff6bf, #ffca45);
+      color: #442d00;
+      border-color: rgba(255,255,255,0.72);
+    }
+
+    body[data-screen="externalScreen"] .side,
+    body[data-screen="roomScreen"] .side {
+      position: fixed;
+      left: 8px;
+      right: 8px;
+      bottom: calc(env(safe-area-inset-bottom) + 7px);
+      z-index: 8;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 16px;
+      background: rgba(247,255,248,0.42);
+      backdrop-filter: blur(16px) saturate(1.14);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.46);
+      padding: 5px;
+      opacity: 0.74;
+    }
+
+    body[data-screen="externalScreen"] .side:focus-within,
+    body[data-screen="roomScreen"] .side:focus-within,
+    body[data-screen="externalScreen"] .side:hover,
+    body[data-screen="roomScreen"] .side:hover {
+      opacity: 1;
+      background: rgba(250,255,250,0.74);
+    }
+
+    body[data-screen="externalScreen"] .side h2,
+    body[data-screen="externalScreen"] .side p,
+    body[data-screen="externalScreen"] .found-list,
+    body[data-screen="roomScreen"] .side h2,
+    body[data-screen="roomScreen"] .side p,
+    body[data-screen="roomScreen"] .found-list {
+      display: none;
+    }
+
+    body[data-screen="externalScreen"] .side .pill,
+    body[data-screen="roomScreen"] .side .pill {
+      display: grid !important;
+      place-items: center;
+      min-width: 50px;
+      min-height: 38px;
+      margin: 0 !important;
+      padding: 6px 8px;
+      border-color: rgba(47,107,79,0.22);
+      background: rgba(255,255,255,0.72);
+      font-size: 0.82rem;
+    }
+
+    body[data-screen="externalScreen"] .side .btn-row,
+    body[data-screen="roomScreen"] .side .btn-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin: 0 !important;
+    }
+
+    body[data-screen="externalScreen"] .side .btn,
+    body[data-screen="roomScreen"] .side .btn {
+      min-height: 38px;
+      padding: 6px 7px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      line-height: 1.15;
+      box-shadow: 0 8px 16px rgba(25,42,47,0.1);
+    }
+
+    body[data-screen="externalScreen"] .stage-complete,
+    body[data-screen="roomScreen"] .stage-complete {
+      bottom: calc(env(safe-area-inset-bottom) + 76px);
+      left: 10px;
+      right: 10px;
+      z-index: 7;
+      background: rgba(18,68,46,0.88);
+      backdrop-filter: blur(12px);
+    }
+
+    body[data-screen="externalScreen"] .ot-game-tip,
+    body[data-screen="roomScreen"] .ot-game-tip {
+      left: 8px;
+      right: 8px;
+      bottom: calc(env(safe-area-inset-bottom) + 102px);
+      padding: 7px 9px;
+      border-radius: 13px;
+      background: rgba(255,253,244,0.68);
+      opacity: 0.9;
+    }
+
+    body[data-screen="externalScreen"] .ot-game-tip strong,
+    body[data-screen="roomScreen"] .ot-game-tip strong {
+      margin-bottom: 2px;
+      font-size: 0.78rem;
+    }
+
+    body[data-screen="externalScreen"] .ot-game-tip strong::before,
+    body[data-screen="roomScreen"] .ot-game-tip strong::before {
+      width: 24px;
+      height: 19px;
+      font-size: 0.64rem;
+    }
+
+    body[data-screen="externalScreen"] .ot-game-tip span,
+    body[data-screen="roomScreen"] .ot-game-tip span {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      font-size: 0.74rem;
+      line-height: 1.35;
+    }
+
+    body[data-screen="externalScreen"] .modal-backdrop,
+    body[data-screen="roomScreen"] .modal-backdrop {
+      align-items: flex-end;
+      padding: 0 10px calc(env(safe-area-inset-bottom) + 12px);
+      background: linear-gradient(180deg, rgba(4,18,12,0.05), rgba(4,18,12,0.5));
+    }
+
+    body[data-screen="externalScreen"] .modal,
+    body[data-screen="roomScreen"] .modal {
+      width: 100%;
+      max-height: 50svh;
+      border-radius: 18px;
+      background: rgba(247,250,247,0.92);
+      backdrop-filter: blur(16px);
+    }
+
+    body[data-screen="externalScreen"] .hint-sheet-backdrop,
+    body[data-screen="roomScreen"] .hint-sheet-backdrop {
+      background: linear-gradient(180deg, rgba(4,18,12,0.03), rgba(4,18,12,0.58));
+    }
+
+    body[data-screen="externalScreen"] .hint-sheet,
+    body[data-screen="roomScreen"] .hint-sheet {
+      max-height: 62svh;
+      background: rgba(255,253,244,0.92);
+      backdrop-filter: blur(16px);
+    }
+
+  }
+
+  @keyframes hintButtonGlow {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 0 3px rgba(255,218,82,0.25), 0 8px 18px rgba(88,47,0,0.18), inset 0 1px 0 rgba(255,255,255,0.68); }
+    50% { transform: translateY(-1px); box-shadow: 0 0 0 5px rgba(255,218,82,0.34), 0 10px 22px rgba(88,47,0,0.26), 0 0 18px rgba(255,207,61,0.58), inset 0 1px 0 rgba(255,255,255,0.7); }
+  }
+
+  @keyframes nextReadyGlow {
+    0%, 100% { transform: translateY(0); filter: brightness(1); }
+    50% { transform: translateY(-1px); filter: brightness(1.08); }
+  }
+
+  @keyframes nextReadyRing {
+    0% { opacity: 0.9; transform: scale(0.98); }
+    100% { opacity: 0; transform: scale(1.08); }
+  }
+
+  @keyframes screenFade {
+    from { opacity: 0.72; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .app {
+      width: min(100% - 30px, 1220px);
+    }
+
+    #startScreen {
+      min-height: calc(100svh - 102px);
+    }
+
+    #startScreen .cover {
+      display: grid;
+      min-height: calc(100svh - 124px);
+      margin: 8px 0 0;
+    }
+
+    #startScreen .cover img {
+      height: 100%;
+      min-height: calc(100svh - 124px);
+      max-height: none;
+    }
+
+    .topbar .brand span {
+      display: none;
+    }
+
+    .top-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .mini-nav {
+      flex: 1 1 auto;
+      padding: 7px 8px;
+      font-size: 0.82rem;
+    }
+
+    .app-mode-grid,
+    .survey-options {
+      grid-template-columns: 1fr;
+    }
+
+    .pill {
+      padding: 7px 10px;
+      font-size: 0.9rem;
+    }
+
+    #profileScreen {
+      min-height: calc(100svh - 96px);
+      gap: 7px;
+    }
+
+    #profileScreen .section-title h2 {
+      font-size: 1.05rem;
+    }
+
+    #profileScreen .section-title p {
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    #profileScreen .selection-help {
+      padding: 6px 8px;
+      font-size: 0.74rem;
+      line-height: 1.25;
+    }
+
+    #profileScreen .choice-grid {
+      gap: 7px;
+    }
+
+    #profileScreen .choice-card.with-image {
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 8px;
+      min-height: 108px;
+      padding: 7px;
+      border-radius: 12px;
+    }
+
+    #profileScreen .choice-card.with-image img {
+      width: 78px;
+      height: 68px;
+      border-radius: 9px;
+    }
+
+    #profileScreen .choice-card h2 {
+      margin-bottom: 3px;
+      font-size: 0.94rem;
+    }
+
+    #profileScreen .choice-card p {
+      margin-bottom: 5px;
+      -webkit-line-clamp: 2;
+      font-size: 0.74rem;
+      line-height: 1.3;
+    }
+
+    #profileScreen .choice-card .pill,
+    #profileScreen .choice-card .select-badge {
+      padding: 3px 6px;
+      font-size: 0.66rem;
+    }
+
+    #profileScreen > .btn-row {
+      gap: 6px;
+      padding-top: 6px;
+    }
+
+    #profileScreen > .btn-row .btn {
+      min-height: 42px;
+      padding: 8px 8px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+    }
+
+    .room-tabs {
+      grid-template-columns: repeat(5, minmax(54px, 1fr));
+      gap: 6px;
+      margin: 12px 0;
+      overflow-x: auto;
+      position: sticky;
+      top: 8px;
+      z-index: 5;
+      padding: 7px;
+      border: 1px solid rgba(47,107,79,0.18);
+      border-radius: 999px;
+      background: rgba(247,250,247,0.92);
+      box-shadow: 0 10px 22px rgba(25,42,47,0.1);
+    }
+
+    .room-tab {
+      min-height: 38px;
+      padding: 8px 9px;
+      font-size: 0.9rem;
+      border-radius: 999px;
+      box-shadow: 0 5px 12px rgba(25,42,47,0.07);
+    }
+
+    .room-tab.active {
+      box-shadow: 0 0 0 3px rgba(47,107,79,0.18), 0 8px 16px rgba(25,42,47,0.1);
+    }
+
+    .modal {
+      border: 1px solid rgba(255,255,255,0.7);
+      background: linear-gradient(180deg, #f7faf7, #f5fbf7);
+      box-shadow: 0 18px 44px rgba(18,31,35,0.3);
+    }
+
+    .modal h2 {
+      border-bottom: 1px solid #dbe8e1;
+      padding-bottom: 10px;
+      color: var(--green-dark);
+    }
+
+    .modal p {
+      border: 1px solid #dbe8e1;
+      border-radius: 10px;
+      background: white;
+      padding: 9px 10px;
+    }
+
+    .stage-head {
+      padding: 8px;
+    }
+
+    .stage-head strong {
+      flex: 1 1 100%;
+      font-size: 0.94rem;
+    }
+
+    .stage-head .pill {
+      flex: 1 1 auto;
+      justify-content: center;
+      min-height: 28px;
+      font-size: 0.72rem;
+    }
+
+    .mobile-hint-button {
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+
+    .room-label {
+      min-width: 64px;
+      min-height: 32px;
+      font-size: 0.86rem;
+    }
+
+    .compare {
+      grid-template-columns: 1fr;
+    }
+
+    .compare figure[style] {
+      grid-column: auto !important;
+    }
+
+    .modal {
+      padding: 16px;
+    }
+
+    .modal h2 {
+      font-size: 1.18rem;
+    }
+
+    .modal p {
+      line-height: 1.55;
+    }
+
+    .stage-complete {
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      padding: 9px 10px;
+      font-size: 0.8rem;
+      background: rgba(23,72,50,0.94);
+      box-shadow: 0 12px 26px rgba(20,30,34,0.2), 0 0 22px rgba(255,207,61,0.16);
+    }
+
+    .stage-complete strong {
+      font-size: 0.94rem;
+    }
+
+    body[data-screen="externalScreen"] .stage-complete,
+    body[data-screen="roomScreen"] .stage-complete {
+      bottom: calc(env(safe-area-inset-bottom) + 96px);
+    }
+
+    body[data-screen="externalScreen"] .ot-game-tip,
+    body[data-screen="roomScreen"] .ot-game-tip {
+      bottom: calc(env(safe-area-inset-bottom) + 94px);
+      padding: 7px 9px;
+    }
+
+    body[data-screen="externalScreen"] .spot,
+    body[data-screen="roomScreen"] .spot {
+      width: 44px;
+    }
+
+    body[data-screen="externalScreen"] .spot.found::before,
+    body[data-screen="roomScreen"] .spot.found::before {
+      width: 13px;
+    }
+
+    body[data-screen="externalScreen"] .hint-pulse,
+    body[data-screen="roomScreen"] .hint-pulse {
+      width: 98px;
+    }
+
+    .learn-card {
+      padding: 14px;
+    }
+
+    .learn-table {
+      font-size: 0.86rem;
+    }
+
+    .learn-table th, .learn-table td {
+      padding: 8px;
+    }
+
+    .resource-card {
+      min-height: 126px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 14px;
+    }
+
+    .resource-thumb {
+      width: 64px;
+      height: 64px;
+      aspect-ratio: auto;
+      border-radius: 16px;
+      font-size: 0.86rem;
+    }
+
+    .missed-item {
+      grid-template-columns: 1fr;
+    }
+
+    .mini-btn {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <div class="brand">
+      <strong>질환에 따른 주거환경개선</strong>
+      <span>작업치료 관점으로 집 안 장벽을 찾고 생활동작을 쉽게 만드는 방법을 배웁니다.</span>
+    </div>
+    <div class="top-actions">
+      <button class="mini-nav" onclick="goStart()">홈</button>
+      <button class="mini-nav" onclick="goLearn()">더 알아보기</button>
+      <button class="mini-nav" onclick="goResources()">관련기관</button>
+      <button class="mini-nav" onclick="goSurvey()">설문</button>
+      <div class="pill"><span id="globalFound">0</span> / <span id="globalTotal">30</span></div>
+    </div>
+  </header>
+
+  <section id="startScreen" class="screen active">
+    <section class="cover">
+      <img src="entry_apartment_external_ot_before.webp" alt="개선점을 찾는 주거환경 점검 게임 표지" width="1536" height="864" fetchpriority="high">
+      <div class="cover-flow-strip" aria-hidden="true">
+        <span>질환 선택</span>
+        <span>위치 찾기</span>
+        <span>개선 확인</span>
+      </div>
+      <div class="cover-game-ui" aria-hidden="true">
+        <div class="cover-score"><span>OT</span> 0 / 30</div>
+        <div class="cover-mission-card">
+          <strong>오늘의 미션</strong>
+          <p>집 안 장벽을 찾아 작업치료 관점의 개선 이유를 확인하세요.</p>
+        </div>
+      </div>
+      <i class="cover-target one" aria-hidden="true"></i>
+      <i class="cover-target two" aria-hidden="true"></i>
+      <i class="cover-target three" aria-hidden="true"></i>
+      <div class="cover-copy">
+        <div>
+          <div class="mission-kicker">작업치료 주거환경 점검 게임</div>
+          <h1>질환에 따른 주거환경개선</h1>
+          <p>질환별 생활동작을 어렵게 만드는 집 안 장벽을 찾고, 작업치료사가 왜 그 환경을 바꾸는지 바로 확인합니다.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="goIntro()">시작하기</button>
+          <button class="btn secondary" onclick="goLearn()">더 알아보기</button>
+          <button class="btn secondary" onclick="goResources()">관련기관</button>
+          <button class="btn soft" onclick="goSurvey()">설문조사</button>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <section id="learnScreen" class="screen">
+    <section class="section-title">
+      <h2>더 알아보기</h2>
+      <p>작업치료 관점의 주거환경개선은 사람의 기능, 활동, 환경을 함께 보고 실제 생활이 가능해지도록 조정하는 과정입니다.</p>
+    </section>
+    <section class="learn-hero">
+      <img src="title_hero_ot_home_modification.webp" alt="작업치료 주거환경개선 교육 이미지" width="1536" height="672" loading="lazy" decoding="async">
+      <div class="learn-hero-copy">
+        <h2>환경을 사람에게 맞추는 것</h2>
+        <p>작업치료 관점의 베리어프리는 문턱 제거만 뜻하지 않습니다. 씻기, 걷기, 옷 입기, 요리하기, 화장실 가기, 침대에서 일어나기 같은 일상생활을 더 안전하고 독립적으로 할 수 있도록 집을 조정하는 과정입니다.</p>
+      </div>
+    </section>
+    <div class="learn-grid">
+      <article class="learn-card">
+        <h2>왜 필요한가?</h2>
+        <p>집은 익숙하지만 사고가 자주 생기는 공간입니다. 작은 문턱, 젖은 바닥, 낮은 침대, 작은 손잡이, 바닥 전선은 낙상, 통증, 화상, 외출 제한, 보호자 부담으로 이어질 수 있습니다.</p>
+        <ul>
+          <li>문턱과 러그: 발 걸림과 휠체어 바퀴 걸림</li>
+          <li>미끄러운 욕실과 주방 바닥: 낙상 위험</li>
+          <li>작은 손잡이와 높은 수납: 통증과 균형 손실</li>
+          <li>야간 이동 동선의 어둠: 화장실 이동 중 사고</li>
+        </ul>
+      </article>
+      <article class="learn-card">
+        <h2>공간별 기본 수정</h2>
+        <table class="learn-table">
+          <tr><th>공간</th><th>바꾸면 좋은 점</th></tr>
+          <tr><td>현관</td><td>문턱 낮추기, 미끄럼 방지, 앉아서 신발 신는 의자, 손잡이</td></tr>
+          <tr><td>거실</td><td>전선 정리, 러그 고정 또는 제거, 이동 동선 확보</td></tr>
+          <tr><td>침실</td><td>침대 높이 조절, 침대 옆 손잡이, 야간 동선 정리</td></tr>
+          <tr><td>욕실</td><td>미끄럼 방지 바닥, 변기 손잡이, 샤워의자, 대비가 보이는 손잡이</td></tr>
+          <tr><td>주방</td><td>자주 쓰는 물건을 허리-어깨 높이에 두고 레버형 손잡이 사용</td></tr>
+        </table>
+      </article>
+      <article class="learn-card">
+        <h2>대상별 핵심 차이</h2>
+        <table class="learn-table">
+          <tr><th>대상</th><th>중요한 문제</th><th>수정 핵심</th></tr>
+          <tr><td>관절염</td><td>통증, 손 힘 부족, 굽힘 부담</td><td>큰 손잡이, 레버형 손잡이, 팔걸이 의자, 손 닿는 수납</td></tr>
+          <tr><td>치매</td><td>기억 저하, 혼란, 위험 판단 어려움</td><td>단순한 배치, 위험물 보관, 색 대비, 익숙한 동선 유지</td></tr>
+          <tr><td>휠체어</td><td>이동공간 부족, 접근 어려움</td><td>문턱 제거, 넓은 동선, 회전공간, 낮은 수납, 무릎공간</td></tr>
+        </table>
+      </article>
+      <article class="learn-card">
+        <h2>조명은 언제 베리어프리인가?</h2>
+        <p>밝은 조명 자체가 목적은 아닙니다. 야간에 침대에서 화장실까지 이동할 때 길과 바닥 장애물이 보이고, 치매 환자가 문과 손잡이를 구분하며, 낙상 위험을 줄일 때 베리어프리 개선이 됩니다.</p>
+        <ul>
+          <li>센서등: 밤에 스위치를 찾지 않아도 이동 가능</li>
+          <li>균일한 조명: 그림자와 착시 감소</li>
+          <li>색 대비: 손잡이, 변기, 문 위치 인식 보조</li>
+        </ul>
+      </article>
+      <article class="learn-card">
+        <h2>관절염: 덜 굽히고 덜 쥐기</h2>
+        <p>관절염 환자는 손가락, 손목, 무릎, 허리, 어깨 통증 때문에 작은 동작도 부담이 될 수 있습니다. 핵심은 작은 힘으로 오래 생활할 수 있게 만드는 것입니다.</p>
+        <table class="learn-table">
+          <tr><th>위험</th><th>개선</th></tr>
+          <tr><td>작은 둥근 손잡이</td><td>레버형 문손잡이, 큰 D형 서랍 손잡이</td></tr>
+          <tr><td>낮은 의자와 침대</td><td>팔걸이 의자, 무릎 높이에 가까운 침대</td></tr>
+          <tr><td>높거나 낮은 수납</td><td>자주 쓰는 물건을 허리-어깨 높이에 배치</td></tr>
+        </table>
+      </article>
+      <article class="learn-card">
+        <h2>치매: 덜 헷갈리게 만들기</h2>
+        <p>치매 환자에게는 넘어짐뿐 아니라 기억 저하, 방향감각 저하, 판단력 저하가 안전 문제로 이어집니다. 익숙한 구조는 유지하되 위험요소를 줄이는 방식이 좋습니다.</p>
+        <table class="learn-table">
+          <tr><th>위험</th><th>개선</th></tr>
+          <tr><td>가스불, 수도, 전기 사용 후 잊음</td><td>자동 차단 조리기기, 타이머, 알림 장치</td></tr>
+          <tr><td>약, 칼, 세제 오사용</td><td>잠금 수납과 명확한 라벨</td></tr>
+          <tr><td>화장실 위치 혼동</td><td>침실-화장실 동선 정리, 색 대비, 야간 센서등</td></tr>
+        </table>
+      </article>
+      <article class="learn-card">
+        <h2>휠체어: 실제로 생활 가능한 집</h2>
+        <p>휠체어 사용자는 집에 들어갈 수 있는 것만으로 충분하지 않습니다. 방향 전환, 물건 사용, 세면대 접근, 침대-휠체어 이동까지 가능해야 합니다.</p>
+        <table class="learn-table">
+          <tr><th>위험</th><th>개선</th></tr>
+          <tr><td>문턱과 좁은 문</td><td>무단차 진입, 경사로, 넓은 문 또는 미닫이문</td></tr>
+          <tr><td>회전공간 부족</td><td>중앙 동선 비우기, 가구 배치 조정</td></tr>
+          <tr><td>높은 수납과 막힌 세면대</td><td>낮은 수납, 하부가 열린 세면대와 작업대</td></tr>
+        </table>
+      </article>
+    </div>
+    <section class="section-title">
+      <h2>관련 자료</h2>
+      <p>아래 기관 카드를 누르면 작업치료, 낙상예방, 치매 안전, 접근성 기준을 확인할 수 있는 공식·전문기관 자료로 이동합니다.</p>
+    </section>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://www.aota.org/practice/practice-settings/home-modifications-key-community-partnerships/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">AOTA</div>
+        <div><strong>AOTA Home Modifications</strong><span>기능, 활동, 환경을 함께 보는 작업치료 주거환경개선</span></div>
+      </a>
+      <a class="resource-card" href="https://www.arthritis.org/health-wellness/healthy-living/daily-living/life-hacks-tips/adapting-your-house" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">AF</div>
+        <div><strong>Arthritis Foundation</strong><span>관절 보호, 손 닿는 수납, 큰 손잡이와 보조도구</span></div>
+      </a>
+      <a class="resource-card" href="https://www.cdc.gov/steadi/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">CDC</div>
+        <div><strong>CDC STEADI</strong><span>낙상예방과 집 안 위험요소 체크</span></div>
+      </a>
+      <a class="resource-card" href="https://www.nia.nih.gov/health/safety/home-safety-checklist-alzheimers-disease" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">NIA</div>
+        <div><strong>NIA Dementia Safety</strong><span>치매 환자의 주방, 약, 욕실, 외출 안전</span></div>
+      </a>
+      <a class="resource-card" href="https://www.ada.gov/law-and-regs/design-standards/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">ADA</div>
+        <div><strong>ADA Design Standards</strong><span>문폭, 회전공간, 접근 가능한 동선 기준</span></div>
+      </a>
+      <a class="resource-card" href="https://www.veteranshealthlibrary.va.gov/LivingWith/SpinalCordInjury/coping/142%2C41181_VA" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">VA</div>
+        <div><strong>VA SCI/D Home</strong><span>척수손상 후 집을 안전하고 독립적으로 쓰는 방법</span></div>
+      </a>
+      <a class="resource-card" href="https://www.nrc.go.kr/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">NRC</div>
+        <div><strong>국립재활원</strong><span>재활, 보조기기, 지역사회 자립생활과 연결되는 국내 재활 자료</span></div>
+      </a>
+      <a class="resource-card" href="https://www.longtermcare.or.kr/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">NHIS</div>
+        <div><strong>노인장기요양보험</strong><span>복지용구와 장기요양 서비스를 확인할 수 있는 국내 공식 자료</span></div>
+      </a>
+      <a class="resource-card" href="https://www.koddi.or.kr/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">BF</div>
+        <div><strong>한국장애인개발원</strong><span>장애물 없는 생활환경과 접근성 제도를 확인할 수 있는 국내 기관</span></div>
+      </a>
+    </div>
+    <div class="credit">
+      이 콘텐츠는 대구보건대학교 작업치료학과 학생들이 작업치료 관점에서 주거환경개선과 베리어프리 개념을 쉽게 이해할 수 있도록 구성한 교육용 자료입니다.
+    </div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn" onclick="goStart()">표지로 돌아가기</button>
+      <button class="btn secondary" onclick="goIntro()">게임 시작</button>
+    </div>
+  </section>
+
+  <section id="resourceScreen" class="screen">
+    <section class="section-title">
+      <h2>관련기관</h2>
+      <p>기관 카드를 누르면 작업치료, 낙상예방, 치매 안전, 접근성 기준을 확인할 수 있는 공식·전문기관 자료로 이동합니다.</p>
+    </section>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://www.aota.org/practice/practice-settings/home-modifications-key-community-partnerships/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">AOTA</div>
+        <div><strong>AOTA Home Modifications</strong><span>작업치료가 기능, 활동, 환경을 함께 보며 주거환경개선을 제안하는 관점</span></div>
+      </a>
+      <a class="resource-card" href="https://www.arthritis.org/health-wellness/healthy-living/daily-living/life-hacks-tips/adapting-your-house" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">AF</div>
+        <div><strong>Arthritis Foundation</strong><span>관절 보호, 손 닿는 수납, 큰 손잡이와 보조도구 관련 생활 팁</span></div>
+      </a>
+      <a class="resource-card" href="https://www.cdc.gov/steadi/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">CDC</div>
+        <div><strong>CDC STEADI</strong><span>낙상예방과 집 안 위험요소 점검에 활용할 수 있는 공식 자료</span></div>
+      </a>
+      <a class="resource-card" href="https://www.nia.nih.gov/health/safety/home-safety-checklist-alzheimers-disease" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">NIA</div>
+        <div><strong>NIA Dementia Home Safety</strong><span>치매 환자의 주방, 약, 욕실, 외출 안전을 확인하는 체크리스트</span></div>
+      </a>
+      <a class="resource-card" href="https://www.ada.gov/law-and-regs/design-standards/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">ADA</div>
+        <div><strong>ADA Design Standards</strong><span>문폭, 회전공간, 접근 가능한 동선 등 접근성 기준</span></div>
+      </a>
+      <a class="resource-card" href="https://www.access-board.gov/ada/guides/chapter-3-clear-floor-or-ground-space-and-turning-space/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">BOARD</div>
+        <div><strong>U.S. Access Board</strong><span>휠체어 회전공간과 바닥 여유공간을 이해하는 접근성 가이드</span></div>
+      </a>
+      <a class="resource-card" href="https://www.nrc.go.kr/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">NRC</div>
+        <div><strong>국립재활원</strong><span>재활, 보조기기, 지역사회 자립생활과 연결되는 국내 재활 자료</span></div>
+      </a>
+      <a class="resource-card" href="https://www.longtermcare.or.kr/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">NHIS</div>
+        <div><strong>노인장기요양보험</strong><span>복지용구와 장기요양 서비스를 확인할 수 있는 국내 공식 자료</span></div>
+      </a>
+      <a class="resource-card" href="https://www.koddi.or.kr/" target="_blank" rel="noreferrer">
+        <div class="resource-thumb">BF</div>
+        <div><strong>한국장애인개발원</strong><span>장애물 없는 생활환경과 접근성 제도를 확인할 수 있는 국내 기관</span></div>
+      </a>
+    </div>
+    <div class="credit">
+      이 콘텐츠는 대구보건대학교 작업치료학과 학생들이 작업치료 관점에서 주거환경개선과 베리어프리 개념을 쉽게 이해할 수 있도록 구성한 교육용 자료입니다.
+    </div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn" onclick="goIntro()">게임 시작</button>
+      <button class="btn secondary" onclick="goLearn()">더 알아보기</button>
+      <button class="btn secondary" onclick="goSurvey()">설문조사</button>
+      <button class="btn soft" onclick="goStart()">표지로 돌아가기</button>
+    </div>
+  </section>
+
+  <section id="surveyScreen" class="screen">
+    <section class="section-title">
+      <h2>설문조사</h2>
+      <p>게임을 통해 작업치료와 주거환경개선이 얼마나 이해되었는지 간단히 확인합니다. 제출하면 화면 안에서 요약만 보여주며 외부로 전송하지 않습니다.</p>
+    </section>
+    <div class="survey-grid">
+      <article class="survey-card">
+        <h2>1. 작업치료가 집 안 환경을 평가한다는 점이 이해되었나요?</h2>
+        <div class="survey-options">
+          <label><input type="radio" name="surveyUnderstand" value="1">1점</label>
+          <label><input type="radio" name="surveyUnderstand" value="2">2점</label>
+          <label><input type="radio" name="surveyUnderstand" value="3">3점</label>
+          <label><input type="radio" name="surveyUnderstand" value="4">4점</label>
+        </div>
+      </article>
+      <article class="survey-card">
+        <h2>2. 질환별로 필요한 주거환경개선이 다르다는 점이 이해되었나요?</h2>
+        <div class="survey-options">
+          <label><input type="radio" name="surveyGame" value="1">1점</label>
+          <label><input type="radio" name="surveyGame" value="2">2점</label>
+          <label><input type="radio" name="surveyGame" value="3">3점</label>
+          <label><input type="radio" name="surveyGame" value="4">4점</label>
+        </div>
+      </article>
+      <article class="survey-card">
+        <h2>3. 이 게임을 보고 작업치료학과나 작업치료 역할에 관심이 생겼나요?</h2>
+        <div class="survey-options">
+          <label><input type="radio" name="surveyPromo" value="1">1점</label>
+          <label><input type="radio" name="surveyPromo" value="2">2점</label>
+          <label><input type="radio" name="surveyPromo" value="3">3점</label>
+          <label><input type="radio" name="surveyPromo" value="4">4점</label>
+        </div>
+      </article>
+      <article class="survey-card">
+        <h2>4. 가장 기억에 남은 개선 항목이나 우리 집에서 바꾸고 싶은 점</h2>
+        <textarea class="survey-textarea" id="surveyComment" placeholder="예: 침대 옆 센서등, 욕실 손잡이, 현관 문턱처럼 실제 집에서도 확인해보고 싶어요."></textarea>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn" onclick="submitSurvey()">설문 결과 보기</button>
+          <button class="btn secondary" onclick="goResources()">관련기관 보기</button>
+          <button class="btn soft" onclick="goStart()">표지로 돌아가기</button>
+        </div>
+        <div class="survey-result" id="surveyResult" hidden></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="profileScreen" class="screen">
+    <div class="section-title">
+      <h2>질환 관점 선택</h2>
+      <p>먼저 어떤 질환의 관점으로 집을 점검할지 카드 하나를 선택합니다.</p>
+    </div>
+    <div class="selection-help" id="profileSelectionHelp">1단계: 아래 카드 중 하나를 누르면 선택 표시가 진하게 바뀝니다.</div>
+    <div class="choice-grid" id="profileChoices"></div>
+    <div class="btn-row">
+      <button class="btn" id="profileNextBtn" onclick="goHouse()" disabled>질환을 먼저 선택하세요</button>
+      <button class="btn secondary" onclick="goStart()">표지로 돌아가기</button>
+      <button class="btn soft" onclick="goLearn()">더 알아보기</button>
+    </div>
+  </section>
+
+  <section id="houseScreen" class="screen">
+    <div class="section-title">
+      <h2>주거 유형 선택</h2>
+      <p>개선 전 평면도를 보고 현재 점검할 주거 유형을 하나 선택합니다.</p>
+    </div>
+    <div class="house-choice-grid" id="houseChoices"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="startExternal()">외부 출입구부터 점검</button>
+      <button class="btn secondary" onclick="goProfile()">질환 다시 선택</button>
+      <button class="btn soft" onclick="goStart()">표지로 돌아가기</button>
+    </div>
+  </section>
+
+  <section id="introScreen" class="screen">
+    <section class="section-title">
+      <h2>게임 방법</h2>
+      <p>먼저 작업치료 관점의 주거환경개선이 무엇인지 확인한 뒤, 게임 흐름대로 질환별 개선 위치를 찾습니다.</p>
+    </section>
+    <section class="ot-brief">
+      <article class="ot-brief-card">
+        <h2>작업치료는 무엇을 보나요?</h2>
+        <p>작업치료사는 사람이 실제로 씻고, 걷고, 요리하고, 화장실에 가고, 침대에서 일어나는 활동을 안전하게 할 수 있는지 평가합니다. 이 게임은 그 평가 과정을 틀린그림찾기처럼 연습하도록 만든 교육용 콘텐츠입니다.</p>
+      </article>
+      <article class="ot-brief-card">
+        <h2>주거환경개선이란?</h2>
+        <p>문턱, 조명, 바닥, 수납 높이, 손잡이, 동선처럼 생활을 방해하는 요소를 사람에게 맞게 바꾸는 과정입니다. 큰 공사뿐 아니라 물건 위치를 옮기는 작은 변화도 포함됩니다.</p>
+      </article>
+    </section>
+    <div class="info-grid">
+      <article class="info-card">
+        <div class="icon">OT</div>
+        <h2>작업치료</h2>
+        <p>질환으로 어려워진 일상생활동작을 평가하고, 사람이 더 안전하고 독립적으로 생활하도록 활동과 환경을 조정합니다.</p>
+      </article>
+      <article class="info-card">
+        <div class="icon">집</div>
+        <h2>주거환경개선</h2>
+        <p>집 안 구조와 물건 배치를 바꿔 통증, 낙상, 화상, 배회, 접근 제한 같은 문제를 줄입니다.</p>
+      </article>
+      <article class="info-card">
+        <div class="icon">BF</div>
+        <h2>베리어프리</h2>
+        <p>사람이 환경에 억지로 맞추는 것이 아니라, 환경을 사람에게 맞춰 누구나 쉽게 사용할 수 있게 만드는 관점입니다.</p>
+      </article>
+    </div>
+    <article class="intro-card">
+      <div class="intro-panel">
+        <h2>게임 흐름</h2>
+        <p>외부 출입구를 먼저 점검한 뒤, 평면도에서 각 방으로 들어갑니다. 힌트를 누르면 위치가 반짝이고, 문제를 찾으면 작업치료 관점의 개선 이유를 확인합니다.</p>
+      </div>
+      <div class="intro-flow">
+        <div class="intro-flow-item"><b>STEP 1</b><span>질환 관점 선택</span></div>
+        <div class="intro-flow-item"><b>STEP 2</b><span>주거 유형 선택</span></div>
+        <div class="intro-flow-item"><b>STEP 3</b><span>외부 출입구 점검</span></div>
+        <div class="intro-flow-item"><b>STEP 4</b><span>평면도에서 방 선택</span></div>
+        <div class="intro-flow-item"><b>STEP 5</b><span>개선점 찾기</span></div>
+        <div class="intro-flow-item"><b>STEP 6</b><span>결과와 설문 확인</span></div>
+      </div>
+    </article>
+    <div class="credit">
+      작업치료사는 질환으로 생기는 생활동작의 어려움과 실제 집 구조를 함께 평가합니다. 이 게임은 그 관점을 틀린그림찾기 방식으로 연습하는 교육용 콘텐츠입니다.
+    </div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn" onclick="goProfile()">질환 관점 선택하기</button>
+      <button class="btn secondary" onclick="goStart()">표지로 돌아가기</button>
+      <button class="btn soft" onclick="goLearn()">더 알아보기</button>
+    </div>
+  </section>
+
+  <section id="floorScreen" class="screen">
+    <div class="floor-layout">
+      <div class="floor-card">
+        <div class="floor-head">
+          <strong id="floorTitle">개선 전 평면도</strong>
+          <span class="pill">방 이름을 클릭하세요</span>
+        </div>
+        <div class="floor-map" id="floorMap"></div>
+      </div>
+      <aside class="side">
+        <h2 id="profileTitle">질환 관점</h2>
+        <p id="profileDesc"></p>
+        <div class="progress-list" id="roomProgress"></div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn" onclick="showResult()">게임 종료</button>
+          <button class="btn secondary" onclick="startExternal()">외부 출입구로 돌아가기</button>
+          <button class="btn secondary" onclick="goProfile()">다시 선택</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="externalScreen" class="screen">
+    <section class="external-layout">
+      <div class="stage-card">
+        <div class="stage-head">
+          <strong>외부 출입구 점검</strong>
+          <span class="pill">내부 평면도 전 단계</span>
+          <button class="mobile-hint-button" onclick="openHintSheet('external')">힌트 보기</button>
+        </div>
+        <div class="stage" id="externalStage"></div>
+        <button class="ot-game-tip" id="externalOtTip" onclick="openOtPoint('external')" type="button"></button>
+      </div>
+      <aside class="side">
+        <h2 class="hint-desktop">외부에서 먼저 볼 위치</h2>
+        <p class="hint-desktop">집 안으로 들어가기 전, 외부 출입구의 장벽을 먼저 점검합니다.</p>
+        <div class="hint-list hint-desktop" id="externalHintList"></div>
+        <div class="pill" style="display:inline-block;margin-bottom:12px"><span id="externalFoundCount">0</span> / <span id="externalTotalCount">5</span></div>
+        <div class="found-list" id="externalFoundList"></div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn" id="externalFloorBtn" onclick="goFloorSmooth()" title="내부 평면도로 이동">평면도 이동</button>
+          <button class="btn secondary" onclick="showResult()" title="게임 종료">종료</button>
+          <button class="btn secondary" onclick="goHouse()" title="주거 유형 다시 선택">유형 선택</button>
+        </div>
+      </aside>
+    </section>
+  </section>
+
+  <section id="roomScreen" class="screen">
+    <nav class="room-tabs" id="roomTabs"></nav>
+    <section class="game-layout">
+      <div class="stage-card">
+        <div class="stage-head">
+          <strong id="roomTitle">현관</strong>
+          <span class="pill">개선 전 장면 · 5개 찾으면 개선 후 전환</span>
+          <button class="mobile-hint-button" onclick="openHintSheet('room')">힌트 보기</button>
+        </div>
+        <div class="stage" id="stage"></div>
+        <button class="ot-game-tip" id="roomOtTip" onclick="openOtPoint('room')" type="button"></button>
+      </div>
+      <aside class="side">
+        <h2>찾은 문제</h2>
+        <p id="roomHelp">개선 전 장면에서 문제 요소 5가지를 눌러보세요.</p>
+        <h2 class="hint-desktop">먼저 볼 위치</h2>
+        <p class="hint-desktop">아래 위치를 차례로 살펴보세요. 위치 이름을 누르면 이미지에서 잠깐 반짝입니다.</p>
+        <div class="hint-list hint-desktop" id="hintList"></div>
+        <div class="pill" style="display:inline-block;margin-bottom:12px"><span id="foundCount">0</span> / <span id="totalCount">5</span></div>
+        <div class="found-list" id="foundList"></div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn" onclick="goFloor()" title="평면도로 돌아가기">평면도</button>
+          <button class="btn secondary" onclick="startExternal()" title="외부 출입구로 돌아가기">외부</button>
+          <button class="btn secondary" onclick="showResult()" title="게임 종료">종료</button>
+        </div>
+      </aside>
+    </section>
+  </section>
+
+  <section id="resultScreen" class="screen">
+    <div class="result-dashboard">
+      <article class="result-hero">
+        <div>
+          <h1>주거환경 점검 결과</h1>
+          <p id="resultSummary"></p>
+        </div>
+        <div class="score-badge"><span><strong id="resultPercent">0%</strong><small id="resultRatio">0/0</small></span></div>
+      </article>
+      <article class="score-card">
+        <h2>방별 점검 결과</h2>
+        <div id="resultList"></div>
+      </article>
+      <section class="result-summary-grid">
+        <article class="urgent-card">
+          <h2>우선 확인할 개선 3가지</h2>
+          <div class="urgent-list" id="urgentList"></div>
+        </article>
+        <div class="result-side-stack">
+          <article class="instagram-card">
+            <img src="instagram_ot_home_lab.svg" alt="" width="58" height="58" loading="lazy" decoding="async">
+            <div>
+              <h2>인스타그램</h2>
+              <p>주거환경개선 자료와 활동 소식을 확인해보세요.<br><span class="handle">@ot_home_lab</span></p>
+            </div>
+            <a class="btn secondary" href="https://www.instagram.com/ot_home_lab/" target="_blank" rel="noreferrer" aria-label="인스타그램 ot_home_lab 새 창으로 열기">바로가기</a>
+          </article>
+          <article class="survey-link-card">
+            <div class="survey-link-icon" aria-hidden="true">설문</div>
+            <div>
+              <h2>설문 참여</h2>
+              <p>게임을 마친 뒤 느낀 점을 남겨주세요. 네이버 폼 링크는 나중에 연결합니다.</p>
+            </div>
+            <button class="btn secondary" type="button" disabled>준비 중</button>
+          </article>
+        </div>
+      </section>
+      <details class="result-detail-card">
+        <summary>작업치료 평가 설명 보기</summary>
+        <div class="result-detail-body">
+          <article class="ot-report-card">
+            <h2>작업치료 평가 요약</h2>
+            <div class="ot-report-grid" id="otReportGrid"></div>
+            <div class="ot-report-message" id="otReportMessage"></div>
+          </article>
+        </div>
+      </details>
+      <details class="result-detail-card">
+        <summary>못 찾은 항목 다시 보기</summary>
+        <div class="result-detail-body">
+          <article class="missed-card">
+            <p>놓친 위치를 한 번 더 확인할 수 있습니다. 위치 보기를 누르면 해당 장면으로 돌아가 힌트가 표시됩니다.</p>
+            <div class="missed-list" id="missedList"></div>
+          </article>
+        </div>
+      </details>
+      <details class="result-detail-card">
+        <summary>실행 체크리스트 보기</summary>
+        <div class="result-detail-body">
+          <article class="checklist-card">
+            <div class="checklist" id="checklist"></div>
+          </article>
+        </div>
+      </details>
+      <article class="checklist-card">
+        <h2>결과 활용</h2>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn" onclick="shareResult()">결과 요약 공유</button>
+          <button class="btn secondary" onclick="copyChecklist()">결과 요약 복사</button>
+          <button class="btn secondary" onclick="goFloor()">방 다시 보기</button>
+          <button class="btn secondary" onclick="goSurvey()">설문 화면</button>
+          <a class="btn secondary" href="https://www.instagram.com/ot_home_lab/" target="_blank" rel="noreferrer" aria-label="인스타그램 ot_home_lab 새 창으로 열기">인스타그램</a>
+          <button class="btn secondary" onclick="resetGame()">처음부터</button>
+        </div>
+        <p class="share-note" id="shareNote"></p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2 id="modalTitle"></h2>
+    <p><strong>문제:</strong> <span id="modalHazard"></span></p>
+    <p><strong>개선:</strong> <span id="modalSolution"></span></p>
+    <p><strong>작업치료 관점:</strong> <span id="modalReason"></span></p>
+    <p class="modal-next-note" id="modalNextNote"></p>
+    <button class="btn" onclick="closeModal()">확인</button>
+  </div>
+</div>
+
+<div class="hint-sheet-backdrop" id="hintSheetBackdrop" onclick="closeHintSheet()">
+  <section class="hint-sheet" onclick="event.stopPropagation()">
+    <div class="hint-sheet-head">
+      <h2 id="hintSheetTitle">힌트 메뉴</h2>
+      <button class="hint-sheet-close" onclick="event.stopPropagation(); closeHintSheet();" type="button">닫기</button>
+    </div>
+    <p class="hint-sheet-desc" id="hintSheetDesc">힌트를 누르면 해당 위치가 이미지 위에서 밝게 표시됩니다.</p>
+    <div class="hint-list" id="hintSheetList"></div>
+  </section>
+</div>
+
+<script>
+const profiles = {
+  arthritis: {
+    name: "관절염",
+    label: "통증, 악력 저하, 굽힘 제한",
+    desc: "관절염 관점에서는 낮은 수납, 작은 손잡이, 낮은 의자, 무거운 물건처럼 통증과 반복 부담을 키우는 환경을 찾습니다.",
+    profileImage: "profile_images/arthritis_profile.webp"
+  },
+  dementia: {
+    name: "치매",
+    label: "기억 저하, 판단력 저하, 배회 위험",
+    desc: "치매 관점에서는 가스불을 잊는 상황, 약과 세제 혼동, 야간 길찾기, 문 열림과 배회 위험처럼 인지 특성과 연결된 환경 단서를 찾습니다.",
+    profileImage: "profile_images/dementia_profile.webp"
+  },
+  wheelchair: {
+    name: "휠체어 사용 척수손상",
+    label: "문턱, 회전공간, 무릎공간, 손 닿는 높이",
+    desc: "휠체어 사용자 관점에서는 문폭, 문턱, 회전공간, 침대와 변기 옆 이승공간, 싱크대 하부 무릎공간을 중심으로 봅니다.",
+    profileImage: "profile_images/wheelchair_sci_profile.webp"
+  }
+};
+
+const houses = {
+  apartment: {
+    name: "아파트",
+    before: "floor_apartment.webp",
+    after: "floor_apartment_after.webp",
+    entryBefore: "entry_apartment_external_ot_before.webp",
+    entryAfter: "entry_apartment_external_ot_after.webp",
+    labels: {
+      entrance: [24, 82],
+      living: [26, 52],
+      bathroom: [48, 61],
+      kitchen: [71, 22],
+      bedroom: [80, 58]
+    }
+  },
+  house: {
+    name: "주택",
+    before: "floor_house.webp",
+    after: "floor_house_after.webp",
+    entryBefore: "entry_house_before.webp",
+    entryAfter: "entry_house_after.webp",
+    labels: {
+      entrance: [48, 75],
+      living: [27, 43],
+      bathroom: [50, 25],
+      kitchen: [75, 58],
+      bedroom: [78, 27]
+    }
+  }
+};
+
+const roomOrder = ["entrance", "living", "bedroom", "bathroom", "kitchen"];
+
+const rooms = {
+  entrance: { name: "현관" },
+  living: { name: "거실" },
+  bedroom: { name: "침실" },
+  bathroom: { name: "욕실" },
+  kitchen: { name: "주방" }
+};
+
+const otFocusByProfile = {
+  arthritis: "통증을 줄이고 손·무릎·허리를 덜 쓰게 만드는 환경",
+  dementia: "혼란을 줄이고 위험한 행동을 예방하는 단순하고 익숙한 환경",
+  wheelchair: "휠체어가 실제로 접근하고 회전하며 옮겨 앉을 수 있는 환경"
+};
+
+const roomActivityFocus = {
+  external: "집에 들어가기 전 문턱, 바닥, 조작부, 통로가 안전한지 봅니다.",
+  entrance: "신발 신고 벗기, 문 열기, 집 안으로 들어가는 첫 이동을 평가합니다.",
+  living: "앉고 일어서기, 물건 사용, 실내 이동 동선이 안전한지 봅니다.",
+  bedroom: "침대에서 일어나기, 옷 꺼내기, 밤에 화장실로 이동하기를 봅니다.",
+  bathroom: "변기 사용, 씻기, 젖은 바닥에서 균형 잡기를 안전하게 할 수 있는지 봅니다.",
+  kitchen: "조리, 설거지, 물건 꺼내기, 불·물 사용을 안전하게 할 수 있는지 봅니다."
+};
+
+const data = {
+  arthritis: {
+    entrance: [
+      item(31, 80, "신발 위치", "자주 신는 신발이 바닥과 낮은 수납칸에 있어 허리와 무릎을 깊게 굽혀야 합니다.", "자주 신는 신발은 허리에서 가슴 높이의 오픈 선반에 둡니다.", "굽히는 동작을 줄이면 허리, 무릎, 손가락 관절 부담이 줄어듭니다."),
+      item(28, 55, "낮은 신발장", "신발장이 낮아 물건을 넣고 꺼낼 때 허리와 무릎을 반복해서 굽혀야 합니다.", "자주 쓰는 칸은 서서 손이 닿는 높이에 두고, 앉을 수 있는 안정적인 현관 벤치를 함께 둡니다.", "굽힘과 한 발 지지 시간을 줄이면 통증과 균형 부담이 줄어듭니다."),
+      item(33, 45, "작은 손잡이", "신발장 손잡이가 작고 둥글어 손가락으로 세게 잡아야 합니다.", "큰 D형 손잡이와 레버형 문손잡이로 바꿉니다.", "악력이 약하거나 손가락 통증이 있어도 손바닥 전체로 조작할 수 있습니다."),
+      item(64, 43, "보조도구 위치", "우산꽂이 주변에는 긴 신발주걱처럼 허리 굽힘을 줄여줄 보조도구가 없습니다.", "긴 신발주걱을 서서 닿는 위치에 걸어 둡니다.", "허리를 굽히지 않고 신발 착용을 마칠 수 있습니다."),
+      item(61, 78, "동선 정리", "신발, 우산, 가방이 현관 동선을 막고 있습니다.", "물건을 수납하고 밝은 센서등으로 동선을 분명하게 만듭니다.", "통증이 있는 상태에서 장애물을 피하는 부담과 낙상 위험을 줄입니다.")
+    ],
+    living: [
+      item(20, 57, "팔걸이 의자", "소파가 너무 낮고 푹신해 앉았다 일어서기 어렵습니다.", "높고 단단하며 팔걸이가 있는 의자나 소파를 사용합니다.", "팔로 지지하며 일어설 수 있어 무릎과 고관절 부담이 줄어듭니다."),
+      item(48, 58, "낮은 중앙 테이블", "낮은 테이블에 물건이 있어 허리를 자주 숙여야 합니다.", "적정 높이의 보조 테이블을 두고 자주 쓰는 물건은 앉은 자리 옆에 둡니다.", "허리 굽힘과 손목 부담을 줄이고 활동을 지속하기 쉽습니다."),
+      item(75, 76, "충전선 정리", "충전선과 작은 물건이 이동 경로에 있어 발이나 보행보조기에 걸릴 수 있습니다.", "전선은 벽면으로 고정하고 멀티탭은 바닥 동선 밖에 둡니다.", "통증 때문에 발을 크게 들기 어려운 상황에서 걸림 위험을 줄입니다."),
+      item(55, 78, "바닥 옷가지", "옷가지와 가방이 바닥 동선에 놓여 있어 이동 중 걸릴 수 있습니다.", "옷가지와 가방은 벽면 수납장이나 바구니로 정리합니다.", "불필요한 회피 동작을 줄이면 무릎과 허리 부담이 감소합니다."),
+      item(84, 55, "작은 서랍 손잡이", "TV장 서랍 손잡이가 작고 둥글어 손가락으로 세게 잡아야 합니다.", "큰 D형 손잡이나 손바닥으로 잡기 쉬운 손잡이로 바꿉니다.", "관절염으로 손가락 통증과 악력 저하가 있을 때 조작 부담을 줄입니다.")
+    ],
+    bedroom: [
+      item(18, 65, "침대 높이", "침대 높이가 맞지 않아 눕고 일어나기 어렵습니다.", "침대 높이를 무릎 높이에 가깝게 조정합니다.", "무릎과 허리에 과한 힘을 주지 않고 이동할 수 있습니다."),
+      item(37, 55, "침대 손잡이", "침대 옆에 몸을 지지할 손잡이나 레일이 없습니다.", "침대 레일이나 손잡이를 설치합니다.", "손과 팔로 균형을 잡으며 안전하게 일어날 수 있습니다."),
+      item(74, 55, "수납 높이", "자주 입는 옷이 높은 선반이나 낮은 깊은 서랍에 있습니다.", "자주 쓰는 옷은 어깨 아래, 허리 근처 높이에 둡니다.", "손을 높이 들거나 깊게 숙이는 동작을 줄입니다."),
+      item(80, 30, "옷장 손잡이", "옷장 손잡이가 작아 손가락으로 세게 잡아당겨야 합니다.", "큰 D형 손잡이로 교체합니다.", "손가락 관절 통증이 있어도 쉽게 열고 닫을 수 있습니다."),
+      item(48, 78, "야간 동선", "야간 동선에 슬리퍼, 러그, 전선이 놓여 있습니다.", "동선을 비우고 센서등을 설치합니다.", "밤에 통증과 뻣뻣함이 있을 때도 이동이 쉬워집니다.")
+    ],
+    bathroom: [
+      item(58, 84, "미끄럼 방지", "욕실 바닥이 젖고 미끄러워 균형 잡기 어렵습니다.", "고정형 미끄럼 방지 매트나 미끄럼 방지 바닥 처리를 합니다.", "관절 통증으로 반응이 느릴 때 미끄럼 위험을 줄입니다."),
+      item(16, 53, "변기 손잡이", "변기가 낮고 옆 손잡이가 없어 앉고 일어서기 어렵습니다.", "높인 변기와 L자 손잡이를 설치합니다.", "무릎 굽힘을 줄이고 팔 지지를 이용해 이동할 수 있습니다."),
+      item(73, 62, "샤워 의자", "샤워 중 앉아서 씻을 의자가 없습니다.", "안정적인 샤워 의자를 둡니다.", "오래 서 있는 부담을 줄이고 씻기 활동을 지속할 수 있습니다."),
+      item(67, 24, "레버 수전", "수전과 샤워 조절부가 작고 돌리기 어렵습니다.", "레버형 수전과 손 닿는 위치의 핸드샤워를 사용합니다.", "손가락 통증이 있어도 큰 움직임으로 조작할 수 있습니다."),
+      item(44, 53, "문턱/수납", "욕실 문턱이 높고 세면도구가 낮은 곳에 있습니다.", "문턱을 낮추고 세면도구를 허리 높이에 둡니다.", "발을 높이 들거나 허리를 숙이는 동작을 줄입니다.")
+    ],
+    kitchen: [
+      item(48, 18, "식기 위치", "자주 쓰는 그릇이 높은 상부장에 있어 팔을 높이 들어야 합니다.", "자주 쓰는 식기는 허리 높이 서랍에 둡니다.", "어깨와 손목 부담을 줄이고 물건을 떨어뜨릴 위험을 낮춥니다."),
+      item(12, 50, "굵은 그립", "무거운 냄비와 작은 조리도구 손잡이를 사용합니다.", "가벼운 냄비와 굵은 미끄럼 방지 손잡이 도구를 사용합니다.", "악력이 약해도 안정적으로 잡을 수 있습니다."),
+      item(46, 43, "쉬운 조작", "둥근 수전과 작은 조작부는 손가락 힘이 많이 필요합니다.", "레버형 수전과 잡기 쉬운 조작부로 바꿉니다.", "손가락 관절에 가는 압박을 줄입니다."),
+      item(56, 82, "마른 바닥", "싱크대 앞 물기와 미끄러운 매트가 있습니다.", "바닥을 마르게 유지하고 고정형 미끄럼 방지 매트를 둡니다.", "급하게 균형을 잡기 어려운 상황의 낙상 위험을 줄입니다."),
+      item(70, 68, "앉은 작업", "앉아서 재료를 준비할 공간이 없습니다.", "무릎 공간이 있는 앉은 작업대를 마련합니다.", "오래 서 있기 어려워도 조리 준비에 참여할 수 있습니다.")
+    ]
+  },
+  dementia: {
+    entrance: [
+      item(50, 25, "어두운 출입문", "현관문과 주변이 어둡고 비슷한 색이라 밤에 방향과 단차를 알아보기 어렵습니다.", "출입구 바닥과 문 주변에 부드러운 센서등을 설치합니다.", "치매에서는 어둠과 그림자가 방향 혼란과 낙상 위험을 키울 수 있습니다."),
+      item(18, 30, "세제 노출", "세제와 생활용품이 현관 수납 위에 그대로 보여 약이나 음료처럼 혼동될 수 있습니다.", "세제와 약품은 잠금 수납장 안에 넣고 출입구에는 필요한 물건만 둡니다.", "치매에서는 물건의 용도 판단이 어려워질 수 있어 위험물 접근을 줄여야 합니다."),
+      item(65, 43, "비슷한 문 구분", "비슷한 색의 문과 수납장이 이어져 어느 문을 사용해야 하는지 헷갈릴 수 있습니다.", "자주 쓰는 문 손잡이와 출입 동선을 색 대비로 구분합니다.", "색 대비는 치매 환자가 공간을 더 쉽게 인식하도록 돕습니다."),
+      item(52, 78, "동선 방해", "가방과 신발이 바닥에 있어 이동 중 걸릴 수 있습니다.", "바닥 물건을 수납해 동선을 단순하게 유지합니다.", "복잡한 환경은 주의분산과 판단 오류를 키웁니다."),
+      item(86, 42, "작은 둥근 문손잡이", "둥근 문손잡이와 비슷한 문들이 반복되어 사용해야 할 문을 구분하기 어렵습니다.", "주요 문에는 잡기 쉬운 손잡이와 명확한 시각 단서를 적용합니다.", "인지 저하가 있을 때 조작하기 쉽고 구분되는 단서가 안전한 이동을 돕습니다.")
+    ],
+    living: [
+      item(48, 57, "약 혼동", "약통과 작은 물건이 탁자 위에 섞여 복용 오류가 생길 수 있습니다.", "약은 잠금 보관함에 넣고 필요한 시간에만 꺼냅니다.", "치매에서는 약 관리가 안전과 직결됩니다."),
+      item(74, 66, "전선 혼란", "멀티탭과 전선이 바닥에 길게 놓여 있어 이동 중 걸리거나 물건 위치를 혼동하기 쉽습니다.", "전선은 벽면으로 정리하고 전기제품 위치를 단순하게 고정합니다.", "치매에서는 복잡한 바닥 정보가 주의분산과 낙상 위험을 키울 수 있습니다."),
+      item(44, 77, "무늬 러그", "강한 무늬 러그가 바닥 높이나 구멍처럼 보일 수 있습니다.", "무늬가 적고 고정된 바닥면으로 바꿉니다.", "시지각 변화가 있을 때 바닥 패턴은 혼란을 줄 수 있습니다."),
+      item(61, 34, "그림자", "어두운 구석과 그림자가 물체를 오해하게 만들 수 있습니다.", "균일한 조명으로 그림자를 줄입니다.", "조명은 방향감각과 안전한 이동을 돕습니다."),
+      item(80, 53, "수납 혼란", "TV장 위 물건과 주변 물건이 정해진 위치 없이 흩어져 있습니다.", "사진 단서가 있는 단순 수납함에 정리합니다.", "시각 단서는 물건 찾기를 돕고 불안을 줄입니다.")
+    ],
+    bedroom: [
+      item(61, 45, "어두운 야간 길", "침대에서 화장실까지 가는 길이 어두워 밤에 길을 잃기 쉽습니다.", "침대에서 문까지 이어지는 야간 센서등을 둡니다.", "야간 조명은 배회와 낙상 위험을 낮춥니다."),
+      item(49, 76, "바닥 물건", "슬리퍼, 옷, 전선이 밤 동선을 막고 있습니다.", "바닥 동선을 비우고 전선을 정리합니다.", "단순한 동선은 혼란 속에서도 이동을 쉽게 합니다."),
+      item(76, 35, "문 구분 어려움", "비슷한 문이 여러 개처럼 보여 화장실 방향을 찾기 어렵습니다.", "화장실 방향을 그림 단서로 분명하게 합니다.", "글보다 그림 단서가 더 직관적일 수 있습니다."),
+      item(28, 55, "침대 옆 혼동", "침대 옆에 약, 물, 작은 물건이 뒤섞여 있습니다.", "약은 잠금 보관하고 필요한 물건만 남깁니다.", "복잡한 물건 배치는 오사용과 불안을 키울 수 있습니다."),
+      item(14, 24, "창문/문 안전", "문과 창문 잠금 상태가 불분명해 무심코 열 수 있습니다.", "안전 잠금과 문 열림 알림을 설치합니다.", "배회 가능성이 있으면 출입 감지가 중요합니다.")
+    ],
+    bathroom: [
+      item(55, 20, "돌리는 수전", "세면대와 샤워 수전이 여러 개의 돌리는 조작부로 되어 있어 온수 조절을 헷갈릴 수 있습니다.", "온도 제한 기능이 있는 단순한 레버 수전으로 바꿉니다.", "판단력 저하가 있을 때 화상 예방과 조작 단순화가 중요합니다."),
+      item(32, 55, "흰 변기 구분", "흰 변기와 밝은 벽·바닥이 비슷해 변기 위치를 한눈에 알아보기 어렵습니다.", "변기 주변과 손잡이에 대비색을 사용해 위치를 분명하게 만듭니다.", "색 대비는 치매 환자의 공간 인식과 화장실 사용을 돕습니다."),
+      item(50, 82, "미끄러운 바닥", "젖은 바닥과 욕실화가 미끄럼 위험을 높입니다.", "미끄럼 방지 바닥과 고정 매트를 사용합니다.", "치매가 있으면 위험 판단과 반응이 늦어질 수 있습니다."),
+      item(7, 42, "문 잠금", "욕실 문이 안에서 잠기면 구조가 어려울 수 있습니다.", "안전한 비잠금 손잡이로 바꿉니다.", "갇힘 상황을 예방하는 것이 중요합니다."),
+      item(72, 58, "세제 혼동", "샴푸, 세제, 약품이 낮은 선반에 섞여 있습니다.", "세제와 약품은 잠금 수납하고 목욕용품만 남깁니다.", "먹거나 바르는 물건을 혼동할 위험을 줄입니다.")
+    ],
+    kitchen: [
+      item(14, 58, "켜진 가스불", "가스불이나 조리기구가 켜진 채 방치되어 화재 위험이 있습니다.", "자동 차단 타이머나 인덕션을 사용합니다.", "치매에서는 조리 중 잊어버림이 큰 안전 문제가 됩니다."),
+      item(78, 58, "가연물", "행주, 종이, 플라스틱이 조리기구 가까이에 있습니다.", "불 주변 가연물을 치우고 조리 구역을 비웁니다.", "화재 위험을 줄이는 기본 환경수정입니다."),
+      item(55, 52, "위험물 노출", "칼, 세제, 약품처럼 혼동될 수 있는 물건이 조리대 위에 열려 있습니다.", "위험물은 잠금 수납장에 보관합니다.", "판단력 저하가 있을 때 접근 자체를 줄이는 것이 안전합니다."),
+      item(73, 53, "음식 혼동", "식재료, 병, 작은 용기가 한곳에 섞여 있어 먹을 것과 아닌 것을 구분하기 어렵습니다.", "혼동될 수 있는 장식과 용기는 치우고 실제 식재료만 명확하게 둡니다.", "시각적 혼동은 부적절한 섭취 위험으로 이어질 수 있습니다."),
+      item(44, 50, "수도 켜짐", "수도꼭지가 열린 채로 물이 흐르고 있어 물 넘침이나 미끄러운 바닥으로 이어질 수 있습니다.", "사용 후 자동 차단 수전이나 눈에 잘 보이는 단순 레버 수전을 사용합니다.", "치매에서는 사용 후 끄는 행동을 잊을 수 있어 물 사용도 안전장치와 함께 봐야 합니다.")
+    ]
+  },
+  wheelchair: {
+    entrance: [
+      item(49, 73, "높은 문턱", "현관 문턱과 단차가 휠체어 진입을 막습니다.", "낮은 경사로나 무단차 전환으로 진입할 수 있게 합니다.", "작은 단차도 휠체어 독립 이동을 크게 제한합니다."),
+      item(39, 67, "회전공간 부족", "현관이 좁고 물건이 많아 휠체어 회전공간이 없습니다.", "바닥을 비워 회전과 방향 전환 공간을 확보합니다.", "회전공간은 출입과 자세 조정에 필수입니다."),
+      item(80, 18, "높은 조작부", "도어락, 인터폰, 손잡이가 높거나 작아 손이 닿기 어렵습니다.", "낮은 위치 조작부와 레버 손잡이를 설치합니다.", "손 닿는 높이는 독립적인 출입과 직결됩니다."),
+      item(67, 66, "진입 경로 막힘", "신발, 가방, 우산이 휠체어 경로를 막고 있습니다.", "수납을 정리해 넓은 진입 경로를 만듭니다.", "바퀴가 걸리지 않는 직선 경로가 필요합니다."),
+      item(34, 83, "바닥 신발", "바닥에 놓인 신발이 바퀴 진행 방향을 틀어지게 할 수 있습니다.", "신발은 수납장 안이나 벽면 수납으로 정리합니다.", "휠체어는 작은 물건에도 바퀴가 걸리거나 방향이 흔들릴 수 있습니다.")
+    ],
+    living: [
+      item(68, 79, "좁은 통로", "가구 간격이 좁아 휠체어가 지나가기 어렵습니다.", "소파와 가구 위치를 조정해 넓은 통로를 만듭니다.", "실내 이동성은 가구 배치에서 시작됩니다."),
+      item(48, 60, "중앙 테이블", "낮은 테이블이 중앙 이동 경로를 막습니다.", "테이블을 옆으로 옮기거나 사이드테이블로 바꿉니다.", "회전과 접근을 위해 중앙 동선이 열려야 합니다."),
+      item(43, 78, "러그 걸림", "러그 가장자리가 휠체어 바퀴에 걸릴 수 있습니다.", "러그를 제거하거나 낮고 단단히 고정된 매트로 바꿉니다.", "바퀴 걸림은 낙상과 이동 중단의 원인이 됩니다."),
+      item(84, 23, "손 닿지 않는 조작부", "스위치, 콘센트, 리모컨이 손 닿기 어려운 위치에 있습니다.", "낮은 스위치와 손 닿는 리모컨 위치를 마련합니다.", "환경 조작이 가능해야 독립생활이 됩니다."),
+      item(26, 56, "이승공간 부족", "소파 옆에 휠체어를 붙일 공간이 없습니다.", "소파 옆 공간을 비워 옮겨 앉기를 가능하게 합니다.", "이승공간은 휴식과 활동 참여에 필수입니다.")
+    ],
+    bedroom: [
+      item(47, 60, "침대 옆 접근", "침대 옆에 협탁과 짐이 있어 휠체어 접근이 어렵습니다.", "침대 옆을 비워 접근과 옮겨 앉을 공간을 만듭니다.", "침대 이동은 하루 중 반복되는 핵심 활동입니다."),
+      item(22, 60, "침대 높이", "침대 높이가 휠체어 좌면과 맞지 않습니다.", "침대 높이를 휠체어 좌면과 비슷하게 맞춥니다.", "높이 차이가 줄어들면 이동 중 낙상 위험이 줄어듭니다."),
+      item(78, 23, "높은 수납", "옷걸이와 수납이 높아 앉은 자세에서 닿기 어렵습니다.", "낮은 옷걸이, 당겨지는 선반, 큰 손잡이를 사용합니다.", "손 닿는 수납은 옷 입기 독립성을 높입니다."),
+      item(52, 70, "바닥 장애물", "러그, 전선, 세탁물이 이동 경로에 있습니다.", "바닥을 비우고 전선을 정리합니다.", "휠체어는 작은 물건에도 방향이 틀어질 수 있습니다."),
+      item(61, 37, "좁은 문폭", "침실 문이 좁거나 여닫이문이 진입을 방해합니다.", "문폭을 넓히거나 미닫이문으로 바꿉니다.", "문폭은 방 사용 가능 여부를 결정합니다.")
+    ],
+    bathroom: [
+      item(66, 72, "샤워 턱", "샤워 공간 앞의 높은 턱이 휠체어 진입과 샤워의자 접근을 막습니다.", "무단차 롤인 샤워와 미끄럼 방지 바닥으로 바꿉니다.", "욕실 접근성은 씻기 활동의 독립성과 안전에 직접 연결됩니다."),
+      item(25, 55, "변기 이승공간", "변기 옆에 휠체어를 붙일 공간이 없습니다.", "변기 옆 이승공간과 L자 손잡이를 마련합니다.", "옮겨 앉기 공간은 독립적인 배변 활동에 필요합니다."),
+      item(49, 53, "세면대 하부 막힘", "받침대형 세면대와 하부 구조가 무릎공간을 막아 정면 접근이 어렵습니다.", "하부가 열린 세면대와 보호 배관을 사용합니다.", "앉은 자세에서 세면대에 가까이 접근할 수 있어야 씻기 활동이 가능합니다."),
+      item(76, 48, "핸드샤워 접근", "샤워부스 턱과 좁은 공간이 롤인 접근을 막고 샤워기 조작도 멀리 있습니다.", "롤인 샤워, 샤워의자, 핸드샤워를 설치합니다.", "샤워 접근은 낙상 위험을 줄이고 자기관리 참여를 높입니다."),
+      item(47, 84, "미끄러운 바닥", "손잡이 부족과 젖은 바닥이 이동을 위험하게 합니다.", "미끄럼 방지 바닥과 충분한 손잡이를 둡니다.", "SCI 이후 균형과 체간 조절을 환경이 보완해야 합니다.")
+    ],
+    kitchen: [
+      item(55, 15, "높은 상부장", "자주 쓰는 식기와 냄비가 높은 상부장에 있습니다.", "낮은 서랍과 당겨지는 선반으로 옮깁니다.", "앉은 자세에서 손 닿는 범위가 중요합니다."),
+      item(49, 54, "무릎공간 없음", "싱크대와 조리대 아래 수납장이 무릎공간을 막습니다.", "하부를 비운 싱크대와 조리대를 사용합니다.", "정면 접근이 가능해야 설거지와 조리가 가능합니다."),
+      item(38, 62, "높은 작업대", "조리대가 앉은 자세에서 너무 높습니다.", "낮은 작업대나 보조 조리대를 마련합니다.", "어깨 부담 없이 작업할 수 있는 높이가 필요합니다."),
+      item(84, 38, "문 열림 방해", "냉장고와 수납장 문이 휠체어 경로를 막습니다.", "손잡이와 문 열림 방향을 접근 가능하게 조정합니다.", "접근과 회전 동선을 함께 고려해야 합니다."),
+      item(54, 76, "좁은 통로", "싱크대 앞 작업대와 좁은 통로가 이동을 방해합니다.", "넓은 통로와 고정형 낮은 매트를 유지합니다.", "주방은 회전과 앞뒤 이동이 반복되는 공간입니다.")
+    ]
+  }
+};
+
+const externalSpotsByHouse = {
+  apartment: [
+    item(49, 71, "접근공간 협소", "택배 상자가 현관문 옆 접근 공간을 좁혀 보행보조기나 휠체어로 문 앞에 충분히 접근하기 어렵습니다.", "현관 앞 물건을 치우고 문 앞에는 방향 전환과 보조기 접근이 가능한 빈 공간을 확보합니다.", "작업치료 평가는 일시적으로 놓인 물건까지 실제 출입 동선을 막는 장벽으로 봅니다."),
+    item(75, 86, "현관 문턱 단차", "현관 하부의 높은 문턱이 발끝, 보행보조기, 휠체어 바퀴가 걸리는 지점이 됩니다.", "낮은 경사 전환재나 문턱 완화재를 설치해 실내외 높이 차이를 줄입니다.", "단차를 줄이면 집에 들어가는 첫 활동에서 낙상과 접근 제한을 함께 낮출 수 있습니다."),
+    item(89, 17, "높은 조작부", "인터폰과 조작부가 높아 앉은 자세나 어깨 움직임이 제한된 사람이 사용하기 어렵습니다.", "손이 닿는 높이에 보조 호출 버튼이나 낮은 위치의 조작 장치를 추가합니다.", "자주 쓰는 조작부는 사용자의 도달 범위 안에 있어야 독립적인 출입이 가능합니다."),
+    item(71, 47, "출입 지지점 부재", "문을 열고 문턱을 넘을 때 잡고 균형을 잡을 수 있는 손잡이나 지지점이 없습니다.", "문 옆에 수직 손잡이나 안정적인 지지대를 설치합니다.", "지지점은 통증, 균형 저하, 한 손 조작이 필요한 상황에서 안전한 출입을 돕습니다."),
+    item(34, 19, "조명과 대비 부족", "복도 조명이 어둡고 현관 문턱 가장자리가 잘 구분되지 않아 야간 출입 때 위험합니다.", "균일한 센서등과 문턱 가장자리 대비 표시로 발 디딜 위치를 분명하게 만듭니다.", "조명은 단순히 밝게 하는 것이 아니라 단차와 이동 경로를 인식하게 하는 환경 단서입니다.")
+  ],
+  house: [
+    item(51, 81, "바닥 불균형", "대문에서 현관까지 바닥이 울퉁불퉁하고 물이 고여 이동이 어렵습니다.", "평탄한 미끄럼 방지 보행면과 배수로를 설치합니다.", "외부 진입부는 낙상과 접근성 문제가 가장 먼저 생기는 구간입니다."),
+    item(50, 61, "계단 손잡이 없음", "현관 계단에 손잡이가 없어 균형을 잡기 어렵습니다.", "계단 양쪽에 연속 손잡이를 설치합니다.", "손잡이는 관절염, 치매, 휠체어 사용자 보호자 모두에게 안전한 지지점이 됩니다."),
+    item(53, 49, "높은 문턱", "현관 앞 단차가 높아 진입이 어렵습니다.", "낮은 경사로 또는 무단차 전환으로 바꿉니다.", "작은 단차도 이동 보조기나 휠체어 사용자의 진입을 크게 제한합니다."),
+    item(73, 26, "야간 출입 시야", "현관 주변 조명이 부족해 밤에 단차와 젖은 바닥을 보기 어렵습니다.", "센서등과 출입구 조명을 설치해 길과 장애물이 보이게 합니다.", "조명은 단순히 밝게 만드는 것이 아니라 안전한 출입 동선을 확인하게 하는 보조 장치입니다."),
+    item(25, 77, "배수 문제", "비가 오면 물이 고이고 미끄러운 구간이 생깁니다.", "배수로를 정비하고 물이 고이지 않게 합니다.", "젖은 바닥은 관절 통증, 인지 저하, 휠체어 이동 모두에 위험합니다.")
+  ]
+};
+
+function item(x, y, tag, hazard, solution, reason) {
+  return { x, y, tag, hazard, solution, reason };
+}
+
+function getExternalSpots() {
+  return externalSpotsByHouse[state.house] || externalSpotsByHouse.apartment;
+}
+
+const state = {
+  profile: null,
+  house: "apartment",
+  room: "entrance",
+  pendingAutoNav: null,
+  roomAfterPreview: {},
+  externalAfterPreview: {},
+  found: {}
+};
+
+Object.keys(profiles).forEach(profile => {
+  state.found[profile] = {};
+  state.found[profile].external = new Set();
+  roomOrder.forEach(room => state.found[profile][room] = new Set());
+});
+
+const preloadedImages = new Set();
+
+function preloadImage(src) {
+  if (!src || preloadedImages.has(src)) return;
+  preloadedImages.add(src);
+  const image = new Image();
+  image.decoding = "async";
+  image.src = src;
+}
+
+function preloadHouseImages(houseKey = state.house) {
+  const house = houses[houseKey];
+  if (!house) return;
+  [house.before, house.after, house.entryBefore, house.entryAfter].forEach(preloadImage);
+}
+
+function preloadProfileScenes(profileKey = state.profile) {
+  if (!profileKey) return;
+  roomOrder.forEach(roomKey => {
+    const scene = getRoomScene(profileKey, roomKey);
+    preloadImage(scene.before);
+    preloadImage(scene.after);
+  });
+}
+
+function preloadCoreImages() {
+  preloadImage("title_hero_ot_home_modification.webp");
+  Object.values(profiles).forEach(profile => preloadImage(profile.profileImage));
+  preloadImage(houses.apartment.entryBefore);
+}
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+  document.body.dataset.screen = id;
+  const active = document.getElementById(id);
+  active.classList.add("active");
+  renderCounters();
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+}
+
+function goStart() { show("startScreen"); }
+function goProfile() { renderProfileChoices(); show("profileScreen"); }
+function goHouse() {
+  if (!state.profile) {
+    renderProfileChoices();
+    show("profileScreen");
+    return;
+  }
+  preloadProfileScenes();
+  renderHouseChoices();
+  show("houseScreen");
+}
+function goIntro() {
+  show("introScreen");
+}
+function goLearn() { show("learnScreen"); }
+function goResources() { show("resourceScreen"); }
+function goSurvey() { show("surveyScreen"); }
+function goFloor() {
+  if (!state.profile) {
+    goProfile();
+    return;
+  }
+  preloadHouseImages();
+  renderFloor();
+  show("floorScreen");
+}
+
+function goFloorSmooth() {
+  document.body.classList.add("screen-shift");
+  setTimeout(() => {
+    goFloor();
+    document.body.classList.remove("screen-shift");
+  }, 140);
+}
+
+function getSurveyValue(name) {
+  const selected = document.querySelector(`input[name="${name}"]:checked`);
+  return selected ? Number(selected.value) : null;
+}
+
+function submitSurvey() {
+  const understand = getSurveyValue("surveyUnderstand");
+  const game = getSurveyValue("surveyGame");
+  const promo = getSurveyValue("surveyPromo");
+  const comment = document.getElementById("surveyComment").value.trim();
+  const result = document.getElementById("surveyResult");
+  if (!understand || !game || !promo) {
+    result.hidden = false;
+    result.innerHTML = "1번부터 3번까지 점수를 먼저 선택해주세요. 점수는 화면 안에서만 요약됩니다.";
+    return;
+  }
+  const avg = ((understand + game + promo) / 3).toFixed(1);
+  result.hidden = false;
+  result.innerHTML = `
+    <strong>설문 요약</strong><br>
+    작업치료 이해도 ${understand}/4점, 질환별 환경수정 이해도 ${game}/4점, 작업치료 홍보 효과 ${promo}/4점, 평균 ${avg}/4점입니다.<br>
+    ${comment ? `기록된 의견: ${comment}` : "자유 의견은 비어 있습니다. 발표나 부스 운영에서는 이 칸을 '우리 집에서 바꾸고 싶은 점'으로 활용하면 좋습니다."}
+  `;
+}
+
+function startExternal() {
+  if (!state.profile) {
+    goProfile();
+    return;
+  }
+  preloadHouseImages();
+  renderExternal();
+  show("externalScreen");
+}
+
+function startFloor() {
+  if (!state.profile) {
+    goProfile();
+    return;
+  }
+  renderFloor();
+  show("floorScreen");
+}
+
+const DEFAULT_SCENE_RATIO = 16 / 9;
+
+function getStageImageRatio(stage) {
+  const ratio = Number(stage.dataset.imageRatio);
+  return Number.isFinite(ratio) && ratio > 0 ? ratio : DEFAULT_SCENE_RATIO;
+}
+
+function getStageImageMetrics(stage) {
+  const rect = stage.getBoundingClientRect();
+  const imageRatio = getStageImageRatio(stage);
+  const stageRatio = rect.width / rect.height;
+  const coverMode = shouldUseStageCoverMode();
+  let displayWidth;
+  let displayHeight;
+  let offsetX;
+  let offsetY;
+  if (coverMode ? stageRatio < imageRatio : stageRatio > imageRatio) {
+    displayHeight = rect.height;
+    displayWidth = rect.height * imageRatio;
+    offsetX = (rect.width - displayWidth) / 2;
+    offsetY = 0;
+  } else {
+    displayWidth = rect.width;
+    displayHeight = rect.width / imageRatio;
+    offsetX = 0;
+    offsetY = (rect.height - displayHeight) / 2;
+  }
+  return { rect, displayWidth, displayHeight, offsetX, offsetY };
+}
+
+function shouldUseStageCoverMode() {
+  return false;
+}
+
+function imagePercentToStagePercent(stage, x, y) {
+  const metrics = getStageImageMetrics(stage);
+  return {
+    x: ((metrics.offsetX + (x / 100) * metrics.displayWidth) / metrics.rect.width) * 100,
+    y: ((metrics.offsetY + (y / 100) * metrics.displayHeight) / metrics.rect.height) * 100
+  };
+}
+
+function positionImageOverlay(stage, element, x, y) {
+  element.dataset.imgX = x;
+  element.dataset.imgY = y;
+  const point = imagePercentToStagePercent(stage, x, y);
+  element.style.left = point.x + "%";
+  element.style.top = point.y + "%";
+}
+
+function positionStageOverlays(stage) {
+  stage.querySelectorAll("[data-img-x][data-img-y]").forEach(element => {
+    positionImageOverlay(stage, element, Number(element.dataset.imgX), Number(element.dataset.imgY));
+  });
+}
+
+function getStagePoint(event, stage) {
+  const rect = stage.getBoundingClientRect();
+  const metrics = getStageImageMetrics(stage);
+  const localX = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+  const localY = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
+  return {
+    x: Math.max(0, Math.min(100, ((localX - metrics.offsetX) / metrics.displayWidth) * 100)),
+    y: Math.max(0, Math.min(100, ((localY - metrics.offsetY) / metrics.displayHeight) * 100)),
+    localX,
+    localY
+  };
+}
+
+function getHitTolerance(type) {
+  const isMobile = window.matchMedia("(max-width: 640px)").matches;
+  if (type === "external") {
+    return isMobile ? { x: 7.2, y: 8.4 } : { x: 5.4, y: 6.6 };
+  }
+  return isMobile ? { x: 6.8, y: 8.0 } : { x: 5.2, y: 6.2 };
+}
+
+function showHintPulse(stage, spot) {
+  stage.querySelectorAll(".hint-pulse").forEach(pulse => pulse.remove());
+  const isMobile = window.matchMedia("(max-width: 640px)").matches;
+  stage.scrollIntoView({ behavior: "smooth", block: isMobile ? "start" : "center" });
+  const delay = isMobile ? 180 : 40;
+  setTimeout(() => {
+    const pulse = document.createElement("div");
+    pulse.className = "hint-pulse";
+    stage.appendChild(pulse);
+    positionImageOverlay(stage, pulse, spot.x, spot.y);
+    setTimeout(() => pulse.remove(), 1850);
+  }, delay);
+}
+
+function getRoomSpotX(spot) {
+  return spot.x;
+}
+
+function isRoomComplete(roomKey = state.room) {
+  return state.found[state.profile][roomKey].size === data[state.profile][roomKey].length;
+}
+
+function showRoomAfterPreview(roomKey = state.room) {
+  if (!state.profile) return;
+  state.roomAfterPreview[`${state.profile}:${roomKey}`] = true;
+}
+
+function hasRoomAfterPreview(roomKey = state.room) {
+  return Boolean(state.roomAfterPreview[`${state.profile}:${roomKey}`]);
+}
+
+function getRoomScene(profileKey = state.profile, roomKey = state.room) {
+  return {
+    before: `scene_images_v3/${profileKey}/${roomKey}_before.webp`,
+    after: `scene_images_v3/${profileKey}/${roomKey}_after.webp`
+  };
+}
+
+function showExternalAfterPreview() {
+  state.externalAfterPreview[`${state.profile}:${state.house}`] = true;
+}
+
+function hasExternalAfterPreview() {
+  return Boolean(state.externalAfterPreview[`${state.profile}:${state.house}`]);
+}
+
+function renderSceneLayers(stage, scene) {
+  stage.dataset.imageRatio = "";
+  const before = document.createElement("div");
+  before.className = "scene-layer scene-before";
+  before.style.backgroundImage = `url("${scene.before}")`;
+  const after = document.createElement("div");
+  after.className = "scene-layer scene-after";
+  after.style.backgroundImage = `url("${scene.after}")`;
+  stage.appendChild(before);
+  stage.appendChild(after);
+  preloadImage(scene.after);
+  const image = new Image();
+  image.onload = () => {
+    stage.dataset.imageRatio = image.naturalWidth / image.naturalHeight;
+    positionStageOverlays(stage);
+  };
+  image.src = scene.before;
+}
+
+function getExternalAfterMessage() {
+  if (state.house === "apartment") {
+    return "<strong>개선 후: 출입 동선이 더 분명해졌습니다</strong><span>복도 통로 확보, 문턱 완화, 야간 시야 확보처럼 집 안으로 들어가기 전 장벽을 줄이는 것이 핵심입니다.</span>";
+  }
+  return "<strong>개선 후: 안전한 진입부로 바뀌었습니다</strong><span>미끄러운 바닥, 계단 손잡이, 단차와 배수 문제를 줄이면 낙상 위험과 접근 어려움이 함께 낮아집니다.</span>";
+}
+
+function getRoomAfterMessage() {
+  return `<strong>개선 후: ${rooms[state.room].name} 활동이 쉬워졌습니다</strong><span>${profiles[state.profile].name} 관점에서 찾은 문제를 줄여 이동, 조작, 자기관리 활동을 더 안전하게 할 수 있습니다.</span>`;
+}
+
+function getOtGameTip(roomKey) {
+  const profileName = profiles[state.profile]?.name || "질환";
+  const profileFocus = otFocusByProfile[state.profile] || "생활동작을 안전하게 만드는 환경";
+  const activityFocus = roomActivityFocus[roomKey] || roomActivityFocus.entrance;
+  return `<strong>작업치료 포인트</strong><span>${profileName} 관점에서는 ${profileFocus}을 봅니다. ${activityFocus}</span>`;
+}
+
+function updateOtGameTip(id, roomKey) {
+  const tip = document.getElementById(id);
+  if (!tip) return;
+  tip.innerHTML = getOtGameTip(roomKey);
+}
+
+function getOtPointDetail(roomKey) {
+  const profileName = profiles[state.profile]?.name || "질환";
+  const profileFocus = otFocusByProfile[state.profile] || "생활동작을 안전하게 만드는 환경";
+  const activityFocus = roomActivityFocus[roomKey] || roomActivityFocus.entrance;
+  const roomName = roomKey === "external" ? "외부 출입구" : rooms[roomKey].name;
+  return {
+    title: `${roomName} 작업치료 포인트`,
+    hazard: `${profileName} 관점에서는 ${profileFocus}을 중심으로 봅니다.`,
+    solution: `${activityFocus} 문제 위치를 찾을 때는 물건 자체보다 그 물건이 씻기, 이동, 조리, 옷 입기 같은 실제 생활동작을 어떻게 방해하는지 연결해서 봅니다.`,
+    reason: "작업치료 기반 주거환경개선은 단순한 인테리어가 아니라, 사람이 집 안에서 더 안전하고 독립적으로 생활하도록 환경을 사람에게 맞추는 과정입니다."
+  };
+}
+
+function openOtPoint(type) {
+  const roomKey = type === "external" ? "external" : state.room;
+  const detail = getOtPointDetail(roomKey);
+  openModal({
+    tag: detail.title,
+    hazard: detail.hazard,
+    solution: detail.solution,
+    reason: detail.reason
+  }, { skipAutoNav: true });
+}
+
+function startRoomAfterTransition(roomKey = state.room) {
+  if (!state.profile) return;
+  const key = `${state.profile}:${roomKey}`;
+  renderRoom();
+  const stage = document.getElementById("stage");
+  requestAnimationFrame(() => {
+    stage.classList.add("after-view");
+    state.roomAfterPreview[key] = true;
+    setTimeout(() => renderRoom(), 2100);
+  });
+}
+
+function startExternalAfterTransition() {
+  if (!state.profile) return;
+  const key = `${state.profile}:${state.house}`;
+  renderExternal();
+  const stage = document.getElementById("externalStage");
+  requestAnimationFrame(() => {
+    stage.classList.add("after-view");
+    state.externalAfterPreview[key] = true;
+    setTimeout(() => renderExternal(), 2100);
+  });
+}
+
+function renderProfileChoices() {
+  document.getElementById("profileChoices").innerHTML = Object.entries(profiles).map(([key, profile]) => `
+    <button class="choice-card with-image ${state.profile === key ? "active" : ""}" onclick="selectProfile('${key}')">
+      <img src="${profile.profileImage}" alt="${profile.name} 대표 이미지" loading="lazy" decoding="async">
+      <div class="choice-body">
+        <div>
+          <h2>${profile.name}</h2>
+          <p>${profile.desc}</p>
+        </div>
+        <div class="choice-footer">
+          <span class="pill">${profile.label}</span>
+          <span class="select-badge">${state.profile === key ? "선택됨" : "선택하기"}</span>
+        </div>
+      </div>
+    </button>
+  `).join("");
+  updateProfileSelectionUI();
+}
+
+function updateProfileSelectionUI() {
+  const next = document.getElementById("profileNextBtn");
+  const help = document.getElementById("profileSelectionHelp");
+  if (!next || !help) return;
+  if (!state.profile) {
+    next.disabled = true;
+    next.textContent = "질환을 먼저 선택하세요";
+    help.innerHTML = "1단계: 아래 카드 중 하나를 누르면 선택 표시가 진하게 바뀝니다.";
+    return;
+  }
+  next.disabled = false;
+  next.textContent = "다음: 주거 유형 선택";
+  help.innerHTML = `<strong>${profiles[state.profile].name} 선택됨</strong> · 이 관점으로 집 안 장벽을 찾습니다.`;
+}
+
+function renderHouseChoices() {
+  document.getElementById("houseChoices").innerHTML = Object.entries(houses).map(([key, house]) => `
+    <button class="choice-card with-image ${state.house === key ? "active" : ""}" onclick="selectHouse('${key}')">
+      <img src="${house.before}" alt="${house.name} 개선 전 평면도" loading="lazy" decoding="async">
+      <div class="choice-body">
+        <div>
+          <h2>${house.name}</h2>
+          <p>${house.name} 개선 전 평면도를 보고 선택합니다. 다음 화면에서 방 이름을 눌러 이동합니다.</p>
+        </div>
+        <span class="pill">개선 전 장면 선택</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectProfile(key) {
+  state.profile = key;
+  preloadProfileScenes(key);
+  renderProfileChoices();
+  renderCounters();
+}
+
+function selectHouse(key) {
+  state.house = key;
+  preloadHouseImages(key);
+  if (state.profile) {
+    state.found[state.profile].external = new Set();
+  }
+  renderHouseChoices();
+}
+
+function renderExternal() {
+  const found = state.found[state.profile].external;
+  const spots = getExternalSpots();
+  const stage = document.getElementById("externalStage");
+  const house = houses[state.house];
+  stage.className = "stage" + (hasExternalAfterPreview() ? " after-view" : "");
+  if (isCoordinateMode()) stage.classList.add("coord-mode");
+  stage.style.backgroundImage = "";
+  stage.innerHTML = "";
+  renderSceneLayers(stage, { before: house.entryBefore, after: house.entryAfter });
+  spots.forEach((spot, index) => {
+    const btn = document.createElement("button");
+    btn.className = "spot" + (found.has(index) ? " found" : "");
+    positionImageOverlay(stage, btn, spot.x, spot.y);
+    btn.setAttribute("aria-label", spot.tag);
+    decorateCoordinateSpot(btn, spot, index);
+    btn.onclick = event => {
+      event.stopPropagation();
+      findExternalSpot(index);
+    };
+    stage.appendChild(btn);
+  });
+  if (hasExternalAfterPreview()) {
+    const done = document.createElement("div");
+    done.className = "stage-complete";
+    done.innerHTML = getExternalAfterMessage();
+    stage.appendChild(done);
+  }
+  stage.onclick = handleExternalStageClick;
+  updateOtGameTip("externalOtTip", "external");
+  document.getElementById("externalFoundCount").textContent = found.size;
+  document.getElementById("externalTotalCount").textContent = spots.length;
+  const nextButton = document.getElementById("externalFloorBtn");
+  if (nextButton) {
+    nextButton.classList.toggle("next-ready", found.size === spots.length);
+    nextButton.textContent = "평면도 이동";
+  }
+  renderExternalHintList();
+  renderExternalFoundList();
+  renderCounters();
+}
+
+function handleExternalStageClick(event) {
+  if (hasExternalAfterPreview()) return;
+  const stage = document.getElementById("externalStage");
+  const point = getStagePoint(event, stage);
+  showCoordinateReadout(stage, point);
+  const hitIndex = findNearbyExternalSpot(point.x, point.y);
+  if (hitIndex !== -1) {
+    findExternalSpot(hitIndex);
+    return;
+  }
+  showWrongOnStage(stage, point.localX, point.localY);
+}
+
+function findNearbyExternalSpot(x, y) {
+  const found = state.found[state.profile].external;
+  const spots = getExternalSpots();
+  const { x: toleranceX, y: toleranceY } = getHitTolerance("external");
+  let bestIndex = -1;
+  let bestScore = Infinity;
+  spots.forEach((spot, index) => {
+    if (found.has(index)) return;
+    const dx = Math.abs(x - spot.x) / toleranceX;
+    const dy = Math.abs(y - spot.y) / toleranceY;
+    const score = dx * dx + dy * dy;
+    if (score <= 1 && score < bestScore) {
+      bestScore = score;
+      bestIndex = index;
+    }
+  });
+  return bestIndex;
+}
+
+function findExternalSpot(index) {
+  const found = state.found[state.profile].external;
+  const spots = getExternalSpots();
+  if (found.has(index)) return;
+  found.add(index);
+  if (found.size === spots.length) {
+    state.pendingAutoNav = {
+      type: "externalAfterPreview",
+      message: "외부 출입구 5개를 모두 찾았습니다. 확인을 누르면 개선 후 모습으로 2초 동안 천천히 전환됩니다."
+    };
+  }
+  renderExternal();
+  openModal(spots[index]);
+}
+
+function renderExternalHintList() {
+  const found = state.found[state.profile].external;
+  const spots = getExternalSpots();
+  document.getElementById("externalHintList").innerHTML = spots.map((spot, index) => `
+    <button class="hint-item ${found.has(index) ? "done" : ""}" onclick="pulseExternalHint(${index})">
+      <span>${index + 1}. ${spot.tag}</span><small>${found.has(index) ? "완료" : "힌트"}</small>
+    </button>
+  `).join("");
+}
+
+function openHintSheet(type) {
+  const isExternal = type === "external";
+  const found = isExternal ? state.found[state.profile].external : state.found[state.profile][state.room];
+  const spots = isExternal ? getExternalSpots() : data[state.profile][state.room];
+  document.getElementById("hintSheetTitle").textContent = isExternal ? "외부 출입구 힌트" : `${rooms[state.room].name} 힌트`;
+  document.getElementById("hintSheetDesc").textContent = "힌트를 누르면 메뉴가 닫히고 이미지 위에서 살펴볼 위치가 밝게 표시됩니다.";
+  document.getElementById("hintSheetList").innerHTML = spots.map((spot, index) => `
+    <button class="hint-item ${found.has(index) ? "done" : ""}" onclick="useSheetHint('${type}', ${index})">
+      <span>${index + 1}. ${spot.tag}</span><small>${found.has(index) ? "완료" : "보기"}</small>
+    </button>
+  `).join("");
+  document.getElementById("hintSheetBackdrop").classList.add("active");
+}
+
+function closeHintSheet() {
+  const sheet = document.getElementById("hintSheetBackdrop");
+  if (sheet) sheet.classList.remove("active");
+}
+
+function closeOverlays() {
+  closeHintSheet();
+  document.getElementById("modalBackdrop").classList.remove("active");
+}
+
+function isCoordinateMode() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("coords") === "1" || params.get("debug") === "coords";
+}
+
+function decorateCoordinateSpot(button, spot, index) {
+  if (!isCoordinateMode()) return;
+  const label = document.createElement("span");
+  label.className = "coord-label";
+  label.textContent = `${index + 1}. ${spot.tag}`;
+  button.appendChild(label);
+  button.title = `${index + 1}. ${spot.tag} (${Math.round(spot.x)}, ${Math.round(spot.y)})`;
+}
+
+function showCoordinateReadout(stage, point) {
+  if (!isCoordinateMode()) return;
+  stage.querySelectorAll(".coord-readout").forEach(node => node.remove());
+  const readout = document.createElement("div");
+  readout.className = "coord-readout";
+  readout.style.left = point.localX + "px";
+  readout.style.top = point.localY + "px";
+  readout.textContent = `x:${point.x.toFixed(1)} y:${point.y.toFixed(1)}`;
+  stage.appendChild(readout);
+  setTimeout(() => readout.remove(), 1700);
+}
+
+function useSheetHint(type, index) {
+  closeHintSheet();
+  setTimeout(() => {
+    if (type === "external") {
+      pulseExternalHint(index);
+      return;
+    }
+    pulseHint(index);
+  }, 120);
+}
+
+function pulseExternalHint(index) {
+  const spot = getExternalSpots()[index];
+  const stage = document.getElementById("externalStage");
+  showHintPulse(stage, spot);
+}
+
+function renderExternalFoundList() {
+  const found = state.found[state.profile].external;
+  const spots = getExternalSpots();
+  const wrap = document.getElementById("externalFoundList");
+  if (!found.size) {
+    wrap.innerHTML = '<div class="empty">아직 찾은 항목이 없습니다. 외부 출입구에서 위험 요소를 눌러보세요.</div>';
+    return;
+  }
+  wrap.innerHTML = [...found].map(index => {
+    const spot = spots[index];
+    return `<div class="found-item"><strong>${spot.tag}</strong><br>${spot.hazard}</div>`;
+  }).join("");
+}
+
+function renderFloor() {
+  const house = houses[state.house];
+  document.getElementById("floorTitle").textContent = `${house.name} 개선 전 평면도`;
+  document.getElementById("profileTitle").textContent = `${profiles[state.profile].name} 관점`;
+  document.getElementById("profileDesc").textContent = profiles[state.profile].desc;
+
+  const map = document.getElementById("floorMap");
+  map.style.backgroundImage = `url("${house.before}")`;
+  map.innerHTML = roomOrder.map(roomKey => {
+    const room = rooms[roomKey];
+    const [x, y] = house.labels[roomKey];
+    const done = state.found[state.profile][roomKey].size === data[state.profile][roomKey].length;
+    return `<button class="room-label ${done ? "done" : ""}" style="left:${x}%;top:${y}%" onclick="enterRoom('${roomKey}')">${room.name}</button>`;
+  }).join("");
+
+  document.getElementById("roomProgress").innerHTML = roomOrder.map(roomKey => {
+    const found = state.found[state.profile][roomKey].size;
+    const total = data[state.profile][roomKey].length;
+    return `<div class="progress-item"><strong>${rooms[roomKey].name}</strong><br>${found}/${total}개 찾음</div>`;
+  }).join("");
+}
+
+function enterRoom(roomKey) {
+  state.room = roomKey;
+  renderRoom();
+  show("roomScreen");
+}
+
+function renderRoomTabs() {
+  document.getElementById("roomTabs").innerHTML = roomOrder.map(roomKey => `
+    <button class="room-tab ${roomKey === state.room ? "active" : ""}" onclick="enterRoom('${roomKey}')">${rooms[roomKey].name}</button>
+  `).join("");
+}
+
+function renderRoom() {
+  const profile = profiles[state.profile];
+  const room = rooms[state.room];
+  const spots = data[state.profile][state.room];
+  const found = state.found[state.profile][state.room];
+  const complete = isRoomComplete();
+  const scene = getRoomScene();
+  document.getElementById("roomTitle").textContent = `${profile.name} - ${room.name}`;
+  document.getElementById("roomHelp").textContent = complete
+    ? "개선 전 장면에서 문제 요소를 모두 찾았습니다. 이미지가 개선 후 모습으로 바뀌었습니다."
+    : "개선 전 화면에서 문제 요소 5가지를 눌러보세요. 모두 찾으면 개선 후 모습으로 천천히 전환됩니다.";
+  document.getElementById("foundCount").textContent = found.size;
+  document.getElementById("totalCount").textContent = spots.length;
+
+  const stage = document.getElementById("stage");
+  stage.className = "stage" + (hasRoomAfterPreview() ? " after-view" : "");
+  if (isCoordinateMode()) stage.classList.add("coord-mode");
+  stage.style.backgroundImage = "";
+  stage.innerHTML = "";
+  renderSceneLayers(stage, scene);
+  spots.forEach((spot, index) => {
+    const btn = document.createElement("button");
+    btn.className = "spot" + (found.has(index) ? " found" : "");
+    positionImageOverlay(stage, btn, getRoomSpotX(spot), spot.y);
+    btn.setAttribute("aria-label", spot.tag);
+    decorateCoordinateSpot(btn, { ...spot, x: getRoomSpotX(spot) }, index);
+    btn.onclick = event => {
+      event.stopPropagation();
+      findSpot(index);
+    };
+    stage.appendChild(btn);
+  });
+  if (hasRoomAfterPreview()) {
+    const done = document.createElement("div");
+    done.className = "stage-complete";
+    done.innerHTML = getRoomAfterMessage();
+    stage.appendChild(done);
+  }
+  stage.onclick = handleStageClick;
+  updateOtGameTip("roomOtTip", state.room);
+
+  renderHintList();
+  renderFoundList();
+  renderRoomTabs();
+  renderCounters();
+}
+
+function handleStageClick(event) {
+  if (hasRoomAfterPreview()) return;
+  const stage = document.getElementById("stage");
+  const point = getStagePoint(event, stage);
+  showCoordinateReadout(stage, point);
+  const hitIndex = findNearbySpot(point.x, point.y);
+  if (hitIndex !== -1) {
+    findSpot(hitIndex);
+    return;
+  }
+  showWrongOnStage(stage, point.localX, point.localY);
+}
+
+function findNearbySpot(x, y) {
+  const spots = data[state.profile][state.room];
+  const found = state.found[state.profile][state.room];
+  const { x: toleranceX, y: toleranceY } = getHitTolerance("room");
+  let bestIndex = -1;
+  let bestScore = Infinity;
+  spots.forEach((spot, index) => {
+    if (found.has(index)) return;
+    const dx = Math.abs(x - getRoomSpotX(spot)) / toleranceX;
+    const dy = Math.abs(y - spot.y) / toleranceY;
+    const score = dx * dx + dy * dy;
+    if (score <= 1 && score < bestScore) {
+      bestScore = score;
+      bestIndex = index;
+    }
+  });
+  return bestIndex;
+}
+
+function showWrongOnStage(stage, x, y) {
+  const mark = document.createElement("div");
+  mark.className = "wrong";
+  mark.textContent = "X";
+  mark.style.left = x + "px";
+  mark.style.top = y + "px";
+  stage.appendChild(mark);
+  setTimeout(() => mark.remove(), 700);
+}
+
+function findSpot(index) {
+  const found = state.found[state.profile][state.room];
+  const spots = data[state.profile][state.room];
+  if (found.has(index)) return;
+  found.add(index);
+  if (found.size === spots.length) {
+    state.pendingAutoNav = {
+      type: "afterPreview",
+      message: "5개를 모두 찾았습니다. 확인을 누르면 개선 후 모습으로 2초 동안 천천히 전환됩니다."
+    };
+  }
+  renderRoom();
+  openModal(spots[index]);
+}
+
+function renderHintList() {
+  const spots = data[state.profile][state.room];
+  const found = state.found[state.profile][state.room];
+  const wrap = document.getElementById("hintList");
+  wrap.innerHTML = spots.map((spot, index) => `
+    <button class="hint-item ${found.has(index) ? "done" : ""}" onclick="pulseHint(${index})">
+      <span>${index + 1}. ${spot.tag}</span><small>${found.has(index) ? "완료" : "힌트"}</small>
+    </button>
+  `).join("");
+}
+
+function pulseHint(index) {
+  const spot = data[state.profile][state.room][index];
+  const stage = document.getElementById("stage");
+  showHintPulse(stage, { ...spot, x: getRoomSpotX(spot) });
+}
+
+function renderFoundList() {
+  const spots = data[state.profile][state.room];
+  const found = state.found[state.profile][state.room];
+  const wrap = document.getElementById("foundList");
+  if (!found.size) {
+    wrap.innerHTML = '<div class="empty">아직 찾은 항목이 없습니다. 개선 전 장면에서 문제 요소를 눌러보세요.</div>';
+    return;
+  }
+  wrap.innerHTML = [...found].map(index => {
+    const spot = spots[index];
+    return `<div class="found-item"><strong>${spot.tag}</strong><br>${spot.hazard}</div>`;
+  }).join("");
+}
+
+function showResult() {
+  if (!state.profile) {
+    goProfile();
+    return;
+  }
+  const found = getProfileFound();
+  const total = getProfileTotal();
+  const missed = total - found;
+  const percent = Math.round((found / total) * 100);
+  const weakest = getWeakestArea();
+  document.getElementById("resultSummary").innerHTML = `
+    <strong>${profiles[state.profile].name}</strong> 관점 · <strong>${houses[state.house].name}</strong><br>
+    ${found}/${total}개 발견, ${missed}개 미발견입니다. 실제 집에서는 <strong>${weakest.name}</strong>부터 먼저 확인해보세요.`;
+  document.getElementById("resultPercent").textContent = `${percent}%`;
+  document.getElementById("resultRatio").textContent = `${found}/${total}`;
+  document.getElementById("resultList").innerHTML = buildScoreRows();
+  renderOtReport(found, total, percent);
+  const urgent = getUrgentItems();
+  document.getElementById("urgentList").innerHTML = urgent.map((item, index) => `
+    <div class="urgent-item">
+      <div class="rank">${index + 1}</div>
+      <div><strong>${item.solution}</strong><span>${item.area} · ${item.tag}</span></div>
+    </div>
+  `).join("");
+  document.getElementById("missedList").innerHTML = buildMissedList(getMissedItems());
+  document.getElementById("checklist").innerHTML = urgent.map(item => `
+    <label class="check-item"><input type="checkbox"><span>${item.solution}<br><small>${item.area} · 예상 비용 ${item.cost}</small></span></label>
+  `).join("");
+  document.getElementById("shareNote").textContent = "";
+  show("resultScreen");
+}
+
+function renderOtReport(found, total, percent) {
+  const weakest = getWeakestArea();
+  const missed = total - found;
+  const profileName = profiles[state.profile].name;
+  const focus = otFocusByProfile[state.profile] || "생활동작을 안전하게 만드는 환경";
+  document.getElementById("otReportGrid").innerHTML = `
+    <div class="ot-report-item"><small>질환 관점</small><strong>${profileName}</strong><br>${focus}</div>
+    <div class="ot-report-item"><small>발견률</small><strong>${percent}%</strong><br>${found}/${total}개 발견 · ${missed}개 미발견</div>
+    <div class="ot-report-item"><small>우선 점검 공간</small><strong>${weakest.name}</strong><br>${weakest.found}/${weakest.total}개 발견, 실제 집에서도 먼저 확인</div>
+  `;
+  document.getElementById("otReportMessage").innerHTML = `
+    작업치료사는 사람의 몸 상태만 보지 않고, <strong>활동이 일어나는 실제 환경</strong>을 함께 봅니다.
+    이번 결과는 ${profileName} 관점에서 ${weakest.name}의 위험요소를 우선 확인하고,
+    손이 닿는 높이, 이동 동선, 조작 난이도, 낙상·화재·혼동 위험을 생활동작과 연결해 개선해야 한다는 뜻입니다.
+  `;
+}
+
+function getWeakestArea() {
+  const rows = [
+    { key: "external", name: "외부 출입구", found: state.found[state.profile].external.size, total: getExternalSpots().length },
+    ...roomOrder.map(roomKey => ({
+      key: roomKey,
+      name: rooms[roomKey].name,
+      found: state.found[state.profile][roomKey].size,
+      total: data[state.profile][roomKey].length
+    }))
+  ];
+  return rows.sort((a, b) => (a.found / a.total) - (b.found / b.total))[0];
+}
+
+function buildMissedList(items) {
+  if (!items.length) {
+    return '<div class="empty">모든 항목을 찾았습니다. 결과 체크리스트를 보며 실제 집에서도 적용 가능한 부분을 골라보세요.</div>';
+  }
+  return items.map(item => `
+    <div class="missed-item">
+      <div><strong>${item.area} · ${item.tag}</strong><span>${item.hazard}</span></div>
+      <button class="mini-btn" onclick="reviewMissed('${item.key}', ${item.index})">위치 보기</button>
+    </div>
+  `).join("");
+}
+
+function reviewMissed(key, index) {
+  if (key === "external") {
+    renderExternal();
+    show("externalScreen");
+    setTimeout(() => pulseExternalHint(index), 120);
+    return;
+  }
+  state.room = key;
+  renderRoom();
+  show("roomScreen");
+  setTimeout(() => pulseHint(index), 120);
+}
+
+function buildScoreRows() {
+  const rows = [
+    { key: "external", name: "외부 출입구", found: state.found[state.profile].external.size, total: getExternalSpots().length },
+    ...roomOrder.map(roomKey => ({
+      key: roomKey,
+      name: rooms[roomKey].name,
+      found: state.found[state.profile][roomKey].size,
+      total: data[state.profile][roomKey].length
+    }))
+  ];
+  return rows.map(row => {
+    const percent = Math.round((row.found / row.total) * 100);
+    const status = percent >= 80 ? "좋음" : percent >= 50 ? "보통" : "낮음";
+    return `
+      <div class="score-row">
+        <div class="score-room">${row.name}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(percent, 8)}%">${percent}%</div></div>
+        <div>${row.found}/${row.total}</div>
+        <div class="score-status">${status}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function getUrgentItems() {
+  const items = getMissedItems();
+  if (!items.length) {
+    roomOrder.forEach(roomKey => {
+      data[state.profile][roomKey].slice(0, 1).forEach(spot => {
+        items.push({ key: roomKey, index: 0, area: rooms[roomKey].name, ...spot, cost: estimateCost(spot.tag) });
+      });
+    });
+  }
+  return items.slice(0, 3);
+}
+
+function getMissedItems() {
+  const items = [];
+  getExternalSpots().forEach((spot, index) => {
+    if (!state.found[state.profile].external.has(index)) {
+      items.push({ key: "external", index, area: "외부 출입구", ...spot, cost: estimateCost(spot.tag) });
+    }
+  });
+  roomOrder.forEach(roomKey => {
+    data[state.profile][roomKey].forEach((spot, index) => {
+      if (!state.found[state.profile][roomKey].has(index)) {
+        items.push({ key: roomKey, index, area: rooms[roomKey].name, ...spot, cost: estimateCost(spot.tag) });
+      }
+    });
+  });
+  return items;
+}
+
+function estimateCost(tag) {
+  if (/손잡이|레버|그립|수전|신발주걱|조작/.test(tag)) return "3~10만원";
+  if (/조명|센서|야간|알림/.test(tag)) return "1~5만원";
+  if (/매트|미끄럼|바닥|동선|정리/.test(tag)) return "1~8만원";
+  if (/문턱|경사|문폭|무단차|롤인|무릎공간|작업대/.test(tag)) return "10~50만원";
+  if (/의자|벤치|침대|변기|샤워/.test(tag)) return "5~20만원";
+  return "3~15만원";
+}
+
+function resultText() {
+  const found = getProfileFound();
+  const total = getProfileTotal();
+  const urgent = getUrgentItems();
+  return [
+    `작업치료 주거환경 점검 결과`,
+    `질환 관점: ${profiles[state.profile].name}`,
+    `주거 유형: ${houses[state.house].name}`,
+    `점수: ${found}/${total}개 발견, ${total - found}개 미발견`,
+    ``,
+    `시급한 개선 TOP ${urgent.length}`,
+    ...urgent.map((item, index) => `${index + 1}. [${item.area}] ${item.solution} (예상 비용 ${item.cost})`)
+  ].join("\n");
+}
+
+async function shareResult() {
+  const text = resultText();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "주거환경 점검 결과", text });
+      document.getElementById("shareNote").textContent = "공유 창을 열었습니다.";
+    } else {
+      await navigator.clipboard.writeText(text);
+      document.getElementById("shareNote").textContent = "결과를 클립보드에 복사했습니다.";
+    }
+  } catch (error) {
+    document.getElementById("shareNote").textContent = "공유를 취소했거나 복사할 수 없습니다.";
+  }
+}
+
+async function copyChecklist() {
+  const text = resultText();
+  try {
+    await navigator.clipboard.writeText(text);
+    document.getElementById("shareNote").textContent = "체크리스트를 클립보드에 복사했습니다.";
+  } catch (error) {
+    document.getElementById("shareNote").textContent = "복사할 수 없습니다. 화면의 체크리스트를 확인해주세요.";
+  }
+}
+function openModal(spot, options = {}) {
+  document.getElementById("modalTitle").textContent = spot.tag;
+  document.getElementById("modalHazard").textContent = spot.hazard;
+  document.getElementById("modalSolution").textContent = spot.solution;
+  document.getElementById("modalReason").textContent = spot.reason;
+  const nextNote = document.getElementById("modalNextNote");
+  if (state.pendingAutoNav && !options.skipAutoNav) {
+    nextNote.textContent = state.pendingAutoNav.message;
+    nextNote.classList.add("active");
+  } else {
+    nextNote.textContent = "";
+    nextNote.classList.remove("active");
+  }
+  document.getElementById("modalBackdrop").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("modalBackdrop").classList.remove("active");
+  const next = state.pendingAutoNav;
+  state.pendingAutoNav = null;
+  if (!next) return;
+  setTimeout(() => {
+    if (next.type === "externalAfterPreview") {
+      startExternalAfterTransition();
+      return;
+    }
+    if (next.type === "afterPreview") {
+      startRoomAfterTransition();
+      return;
+    }
+    if (next.type === "floor") {
+      goFloor();
+      return;
+    }
+    if (next.type === "room") {
+      enterRoom(next.room);
+      return;
+    }
+    if (next.type === "result") {
+      showResult();
+    }
+  }, 180);
+}
+
+function getProfileFound() {
+  if (!state.profile) return 0;
+  return state.found[state.profile].external.size + roomOrder.reduce((sum, roomKey) => sum + state.found[state.profile][roomKey].size, 0);
+}
+
+function getProfileTotal() {
+  const profileKey = state.profile || "arthritis";
+  return getExternalSpots().length + roomOrder.reduce((sum, roomKey) => sum + data[profileKey][roomKey].length, 0);
+}
+
+function renderCounters() {
+  document.getElementById("globalFound").textContent = getProfileFound();
+  document.getElementById("globalTotal").textContent = getProfileTotal();
+}
+
+function resetGame() {
+  Object.keys(profiles).forEach(profile => {
+    state.found[profile].external = new Set();
+    roomOrder.forEach(room => state.found[profile][room] = new Set());
+  });
+  state.profile = null;
+  state.house = "apartment";
+  state.room = "entrance";
+  state.pendingAutoNav = null;
+  state.roomAfterPreview = {};
+  state.externalAfterPreview = {};
+  goStart();
+}
+
+renderProfileChoices();
+renderCounters();
+preloadCoreImages();
+let resizeFrame = null;
+window.addEventListener("resize", () => {
+  if (resizeFrame) cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => {
+    document.querySelectorAll(".stage").forEach(positionStageOverlays);
+    resizeFrame = null;
+  });
+});
+window.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeOverlays();
+  }
+});
+</script>
+</body>
+</html>
+
+
+
