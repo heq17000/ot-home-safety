@@ -1295,8 +1295,9 @@
     grid-template-columns: 58px minmax(0, 1fr) auto;
     gap: 14px;
     align-items: center;
-    border-color: #d7e4dc;
-    background: #eef5f1;
+    border: 2px solid #1f6f4a;
+    background: #e6f3ec;
+    box-shadow: 0 14px 30px rgba(31,111,74,0.14);
   }
 
   .survey-link-icon {
@@ -1305,21 +1306,20 @@
     width: 58px;
     height: 58px;
     border-radius: 14px;
-    background: #e6f3ec;
-    color: var(--green-dark);
+    background: #1f6f4a;
+    color: #ffffff;
     font-weight: 900;
-    font-size: 1.25rem;
+    font-size: 1.05rem;
   }
 
   .survey-link-card p {
     margin: 0;
-    color: #40534a;
+    color: #263f34;
     line-height: 1.5;
   }
 
-  .survey-link-card .btn[disabled] {
-    opacity: 0.72;
-    cursor: default;
+  .survey-link-card .btn {
+    white-space: nowrap;
   }
 
   .instagram-card {
@@ -3249,7 +3249,7 @@
       <button class="mini-nav" onclick="goStart()">홈</button>
       <button class="mini-nav" onclick="goLearn()">더 알아보기</button>
       <button class="mini-nav" onclick="goResources()">관련기관</button>
-      <button class="mini-nav" onclick="goSurvey()">설문</button>
+      <a class="mini-nav" href="https://form.naver.com/response/m9DRrMbiFxV-UK7sLzZSkQ" target="_blank" rel="noreferrer" aria-label="네이버 폼 설문조사 새 창으로 열기">설문</a>
       <div class="pill"><span id="globalFound">0</span> / <span id="globalTotal">30</span></div>
     </div>
   </header>
@@ -3282,7 +3282,7 @@
           <button class="btn" onclick="goIntro()">시작하기</button>
           <button class="btn secondary" onclick="goLearn()">더 알아보기</button>
           <button class="btn secondary" onclick="goResources()">관련기관</button>
-          <button class="btn soft" onclick="goSurvey()">설문조사</button>
+          <a class="btn soft" href="https://form.naver.com/response/m9DRrMbiFxV-UK7sLzZSkQ" target="_blank" rel="noreferrer" aria-label="네이버 폼 설문조사 새 창으로 열기">설문조사</a>
         </div>
       </div>
     </section>
@@ -3472,7 +3472,7 @@
     <div class="btn-row" style="margin-top:16px">
       <button class="btn" onclick="goIntro()">게임 시작</button>
       <button class="btn secondary" onclick="goLearn()">더 알아보기</button>
-      <button class="btn secondary" onclick="goSurvey()">설문조사</button>
+      <a class="btn secondary" href="https://form.naver.com/response/m9DRrMbiFxV-UK7sLzZSkQ" target="_blank" rel="noreferrer" aria-label="네이버 폼 설문조사 새 창으로 열기">설문조사</a>
       <button class="btn soft" onclick="goStart()">표지로 돌아가기</button>
     </div>
   </section>
@@ -3714,9 +3714,9 @@
             <div class="survey-link-icon" aria-hidden="true">설문</div>
             <div>
               <h2>설문 참여</h2>
-              <p>게임을 마친 뒤 느낀 점을 남겨주세요. 네이버 폼 링크는 나중에 연결합니다.</p>
+              <p>게임을 마친 뒤 느낀 점을 남겨주세요. 버튼을 누르면 네이버 폼 설문이 새 창으로 열립니다.</p>
             </div>
-            <button class="btn secondary" type="button" disabled>준비 중</button>
+            <a class="btn" href="https://form.naver.com/response/m9DRrMbiFxV-UK7sLzZSkQ" target="_blank" rel="noreferrer" aria-label="네이버 폼 설문조사 새 창으로 열기">설문 참여</a>
           </article>
         </div>
       </section>
@@ -3753,7 +3753,7 @@
           <button class="btn" onclick="shareResult()">결과 요약 공유</button>
           <button class="btn secondary" onclick="copyChecklist()">결과 요약 복사</button>
           <button class="btn secondary" onclick="goFloor()">방 다시 보기</button>
-          <button class="btn secondary" onclick="goSurvey()">설문 화면</button>
+          <a class="btn secondary" href="https://form.naver.com/response/m9DRrMbiFxV-UK7sLzZSkQ" target="_blank" rel="noreferrer" aria-label="네이버 폼 설문조사 새 창으로 열기">설문 참여</a>
           <a class="btn secondary" href="https://www.instagram.com/ot_home_lab/" target="_blank" rel="noreferrer" aria-label="인스타그램 ot_home_lab 새 창으로 열기">인스타그램</a>
           <button class="btn secondary" onclick="resetGame()">처음부터</button>
         </div>
@@ -4145,7 +4145,9 @@ function goIntro() {
 }
 function goLearn() { show("learnScreen"); }
 function goResources() { show("resourceScreen"); }
-function goSurvey() { show("surveyScreen"); }
+function goSurvey() {
+  window.open("https://form.naver.com/response/m9DRrMbiFxV-UK7sLzZSkQ", "_blank", "noopener,noreferrer");
+}
 function goFloor() {
   if (!state.profile) {
     goProfile();
