@@ -6,7 +6,7 @@
 <meta name="description" content="작업치료 관점에서 관절염, 치매, 휠체어 사용 척수손상 환자의 주거환경개선과 베리어프리를 배우는 틀린그림찾기 게임">
 <meta name="theme-color" content="#174832">
 <link rel="preload" as="image" href="title_hero_ot_home_modification.webp">
-<link rel="preload" as="image" href="entry_apartment_external_ot_before.webp">
+<link rel="preload" as="image" href="external_images_v4/arthritis/apartment_before.webp">
 <title>작업치료 주거환경 개선 틀린그림찾기</title>
 <style>
   :root {
@@ -3256,7 +3256,7 @@
 
   <section id="startScreen" class="screen active">
     <section class="cover">
-      <img src="entry_apartment_external_ot_before.webp" alt="개선점을 찾는 주거환경 점검 게임 표지" width="1536" height="864" fetchpriority="high">
+      <img src="external_images_v4/arthritis/apartment_before.webp" alt="개선점을 찾는 주거환경 점검 게임 표지" width="1536" height="864" fetchpriority="high">
       <div class="cover-flow-strip" aria-hidden="true">
         <span>질환 선택</span>
         <span>위치 찾기</span>
@@ -3812,8 +3812,6 @@ const houses = {
     name: "아파트",
     before: "floor_apartment.webp",
     after: "floor_apartment_after.webp",
-    entryBefore: "entry_apartment_external_ot_before.webp",
-    entryAfter: "entry_apartment_external_ot_after.webp",
     labels: {
       entrance: [24, 82],
       living: [26, 52],
@@ -3826,8 +3824,6 @@ const houses = {
     name: "주택",
     before: "floor_house.webp",
     after: "floor_house_after.webp",
-    entryBefore: "entry_house_before.webp",
-    entryAfter: "entry_house_after.webp",
     labels: {
       entrance: [48, 75],
       living: [27, 43],
@@ -3977,21 +3973,88 @@ const data = {
   }
 };
 
-const externalSpotsByHouse = {
-  apartment: [
-    item(49, 71, "접근공간 협소", "택배 상자가 현관문 옆 접근 공간을 좁혀 보행보조기나 휠체어로 문 앞에 충분히 접근하기 어렵습니다.", "현관 앞 물건을 치우고 문 앞에는 방향 전환과 보조기 접근이 가능한 빈 공간을 확보합니다.", "작업치료 평가는 일시적으로 놓인 물건까지 실제 출입 동선을 막는 장벽으로 봅니다."),
-    item(75, 86, "현관 문턱 단차", "현관 하부의 높은 문턱이 발끝, 보행보조기, 휠체어 바퀴가 걸리는 지점이 됩니다.", "낮은 경사 전환재나 문턱 완화재를 설치해 실내외 높이 차이를 줄입니다.", "단차를 줄이면 집에 들어가는 첫 활동에서 낙상과 접근 제한을 함께 낮출 수 있습니다."),
-    item(89, 17, "높은 조작부", "인터폰과 조작부가 높아 앉은 자세나 어깨 움직임이 제한된 사람이 사용하기 어렵습니다.", "손이 닿는 높이에 보조 호출 버튼이나 낮은 위치의 조작 장치를 추가합니다.", "자주 쓰는 조작부는 사용자의 도달 범위 안에 있어야 독립적인 출입이 가능합니다."),
-    item(71, 47, "출입 지지점 부재", "문을 열고 문턱을 넘을 때 잡고 균형을 잡을 수 있는 손잡이나 지지점이 없습니다.", "문 옆에 수직 손잡이나 안정적인 지지대를 설치합니다.", "지지점은 통증, 균형 저하, 한 손 조작이 필요한 상황에서 안전한 출입을 돕습니다."),
-    item(34, 19, "조명과 대비 부족", "복도 조명이 어둡고 현관 문턱 가장자리가 잘 구분되지 않아 야간 출입 때 위험합니다.", "균일한 센서등과 문턱 가장자리 대비 표시로 발 디딜 위치를 분명하게 만듭니다.", "조명은 단순히 밝게 하는 것이 아니라 단차와 이동 경로를 인식하게 하는 환경 단서입니다.")
-  ],
-  house: [
-    item(51, 81, "바닥 불균형", "대문에서 현관까지 바닥이 울퉁불퉁하고 물이 고여 이동이 어렵습니다.", "평탄한 미끄럼 방지 보행면과 배수로를 설치합니다.", "외부 진입부는 낙상과 접근성 문제가 가장 먼저 생기는 구간입니다."),
-    item(50, 61, "계단 손잡이 없음", "현관 계단에 손잡이가 없어 균형을 잡기 어렵습니다.", "계단 양쪽에 연속 손잡이를 설치합니다.", "손잡이는 관절염, 치매, 휠체어 사용자 보호자 모두에게 안전한 지지점이 됩니다."),
-    item(53, 49, "높은 문턱", "현관 앞 단차가 높아 진입이 어렵습니다.", "낮은 경사로 또는 무단차 전환으로 바꿉니다.", "작은 단차도 이동 보조기나 휠체어 사용자의 진입을 크게 제한합니다."),
-    item(73, 26, "야간 출입 시야", "현관 주변 조명이 부족해 밤에 단차와 젖은 바닥을 보기 어렵습니다.", "센서등과 출입구 조명을 설치해 길과 장애물이 보이게 합니다.", "조명은 단순히 밝게 만드는 것이 아니라 안전한 출입 동선을 확인하게 하는 보조 장치입니다."),
-    item(25, 77, "배수 문제", "비가 오면 물이 고이고 미끄러운 구간이 생깁니다.", "배수로를 정비하고 물이 고이지 않게 합니다.", "젖은 바닥은 관절 통증, 인지 저하, 휠체어 이동 모두에 위험합니다.")
-  ]
+const externalScenesByProfile = {
+  arthritis: {
+    apartment: {
+      before: "external_images_v4/arthritis/apartment_before.webp",
+      after: "external_images_v4/arthritis/apartment_after.webp"
+    },
+    house: {
+      before: "external_images_v4/arthritis/house_before.webp",
+      after: "external_images_v4/arthritis/house_after.webp"
+    }
+  },
+  dementia: {
+    apartment: {
+      before: "external_images_v4/dementia/apartment_before.webp",
+      after: "external_images_v4/dementia/apartment_after.webp"
+    },
+    house: {
+      before: "external_images_v4/dementia/house_before.webp",
+      after: "external_images_v4/dementia/house_after.webp"
+    }
+  },
+  wheelchair: {
+    apartment: {
+      before: "external_images_v4/wheelchair/apartment_before.webp",
+      after: "external_images_v4/wheelchair/apartment_after.webp"
+    },
+    house: {
+      before: "external_images_v4/wheelchair/house_before.webp",
+      after: "external_images_v4/wheelchair/house_after.webp"
+    }
+  }
+};
+
+const externalSpotsByProfile = {
+  arthritis: {
+    apartment: [
+      item(50, 83, "현관 문턱 단차", "현관 하부의 단차가 발끝에 걸리고 무릎과 발목을 더 많이 쓰게 만듭니다.", "낮은 문턱 전환재와 대비 표시로 발 디딤 위치를 분명하게 만듭니다.", "관절염에서는 작은 단차도 통증, 뻣뻣함, 균형 부담을 키울 수 있습니다."),
+      item(56, 55, "작은 문손잡이", "작은 손잡이는 손가락 끝으로 세게 잡아 돌리거나 당겨야 합니다.", "큰 레버형 손잡이로 바꿔 손바닥과 팔 움직임으로 조작하게 합니다.", "악력 저하와 손가락 통증이 있을 때 레버형 조작부가 관절 부담을 줄입니다."),
+      item(55, 16, "무거운 도어클로저", "문 위 도어클로저가 강하면 문을 여닫을 때 어깨와 손목에 부담이 갑니다.", "문 닫힘 속도와 힘을 조절하거나 보조 개폐 장치를 사용합니다.", "출입은 하루에 반복되는 활동이라 조작 힘을 줄이는 환경수정이 중요합니다."),
+      item(81, 78, "낮은 물품 위치", "택배나 수납 위치가 낮아 허리와 무릎을 굽혀야 합니다.", "자주 받는 물건은 허리 높이 선반이나 받침 위치로 옮깁니다.", "굽힘 동작을 줄이면 무릎, 허리, 손 관절의 반복 부담을 낮출 수 있습니다."),
+      item(43, 82, "바닥 대비 부족", "문턱과 바닥의 색 대비가 약해 발 디딜 위치를 빠르게 파악하기 어렵습니다.", "문턱 가장자리와 바닥 전환부를 명확한 대비색으로 표시합니다.", "통증이 있는 상태에서 망설임과 보상 움직임이 줄어들어 출입이 쉬워집니다.")
+    ],
+    house: [
+      item(47, 82, "울퉁불퉁한 보행면", "대문에서 현관까지 바닥이 고르지 않아 무릎과 발목에 충격이 반복됩니다.", "평탄한 미끄럼 방지 보행면으로 정비합니다.", "관절염에서는 불규칙한 바닥이 통증과 낙상 위험을 함께 높입니다."),
+      item(55, 63, "계단 부담", "여러 계단을 오르내려야 해 무릎과 고관절 부담이 큽니다.", "계단 높이를 낮추거나 중간 휴식 지점과 손잡이를 마련합니다.", "반복적인 계단 이동은 관절 통증을 악화시킬 수 있어 보조 지지가 필요합니다."),
+      item(57, 40, "높은 문턱", "현관 앞 단차가 커서 발을 높이 들어야 합니다.", "낮은 경사 전환재로 높이 차이를 완만하게 만듭니다.", "발 들기와 체중 이동 부담을 줄이면 출입 안정성이 높아집니다."),
+      item(58, 31, "작은 문손잡이", "현관 손잡이가 작아 손가락 힘을 많이 써야 합니다.", "큰 레버형 손잡이와 잡기 쉬운 보조 손잡이를 적용합니다.", "손가락 관절에 집중되는 압력을 줄이는 것이 관절 보호의 기본입니다."),
+      item(78, 58, "낮은 택배 위치", "문 옆 낮은 곳의 물건을 집으려면 허리를 깊게 숙여야 합니다.", "허리 높이의 받침 선반이나 무인 보관함 위치를 마련합니다.", "물건 받기 활동도 실제 생활의 반복 활동이므로 굽힘을 줄이는 것이 좋습니다.")
+    ]
+  },
+  dementia: {
+    apartment: [
+      item(56, 48, "문 구분 어려움", "문과 벽의 색이 비슷해 집의 출입문을 한눈에 구분하기 어렵습니다.", "문틀과 손잡이 주변에 익숙하고 단순한 대비 단서를 둡니다.", "치매에서는 복잡한 설명보다 눈에 바로 들어오는 시각 단서가 길찾기를 돕습니다."),
+      item(24, 44, "비슷한 주변 문", "복도에 비슷한 문과 패널이 반복되어 어느 문으로 가야 하는지 헷갈릴 수 있습니다.", "사용해야 하는 출입구만 색 대비와 단순 표식으로 강조합니다.", "비슷한 시각 정보가 많으면 방향 혼란과 배회 위험이 커질 수 있습니다."),
+      item(81, 78, "택배 시각 혼란", "택배 상자가 출입구 주변에 쌓여 동선을 복잡하게 보이게 합니다.", "문 앞 물건을 치우고 출입 동선을 단순하게 유지합니다.", "치매에서는 바닥과 주변 물건이 많을수록 주의가 분산되고 낙상 위험도 높아집니다."),
+      item(62, 40, "복잡한 조작부", "작은 조작부가 여러 개 보이면 무엇을 눌러야 하는지 판단이 어려울 수 있습니다.", "자주 쓰는 기능만 쉽게 보이도록 단순화하고 보호자 호출 단서를 분명히 합니다.", "인지 저하가 있으면 조작 단계와 선택지를 줄이는 것이 안전합니다."),
+      item(43, 84, "문턱 대비 부족", "문턱과 바닥 경계가 흐려 밤이나 피곤한 시간에 단차를 놓칠 수 있습니다.", "문턱 가장자리에 명확한 대비 표시와 균일한 센서등을 둡니다.", "색 대비와 조명은 공간 인식과 낙상 예방을 함께 돕습니다.")
+    ],
+    house: [
+      item(50, 30, "어두운 현관", "현관 주변이 어두워 문, 계단, 길의 위치를 파악하기 어렵습니다.", "현관과 보행로에 균일한 센서등을 설치합니다.", "치매에서는 그림자와 어둠이 착각과 불안을 키울 수 있습니다."),
+      item(50, 76, "불분명한 이동 경로", "대문에서 현관까지 가는 길이 어둡고 복잡해 방향을 잃기 쉽습니다.", "대문부터 현관까지 한 방향으로 이어지는 밝은 경로를 만듭니다.", "단순하고 예측 가능한 동선은 배회와 낙상 위험을 줄입니다."),
+      item(52, 58, "계단 가장자리 미표시", "계단 가장자리가 잘 보이지 않아 발 디딤 위치를 놓칠 수 있습니다.", "계단 끝을 대비색으로 표시하고 조명을 고르게 비춥니다.", "시지각 변화가 있을 때 단차 표시가 실제 안전 행동을 돕습니다."),
+      item(77, 55, "비슷한 출입 요소", "대문, 담장, 주변 문이 비슷하게 보여 어느 쪽으로 가야 하는지 혼란스럽습니다.", "사용하는 출입구에만 단순한 색 또는 모양 단서를 둡니다.", "선택지를 줄이고 익숙한 단서를 반복하면 길찾기가 쉬워집니다."),
+      item(34, 64, "주변 시각 clutter", "식물과 물건이 길 주변에 많아 필요한 단서가 묻힐 수 있습니다.", "출입로 주변 물건을 줄이고 필요한 단서만 남깁니다.", "환경을 단순화하면 주의분산과 잘못된 판단을 줄일 수 있습니다.")
+    ]
+  },
+  wheelchair: {
+    apartment: [
+      item(50, 82, "높은 문턱", "현관 하부 단차가 휠체어 앞바퀴 진입을 막습니다.", "무단차 전환이나 낮은 경사 전환재를 적용합니다.", "휠체어 접근성에서는 작은 단차도 독립 출입을 제한하는 큰 장벽입니다."),
+      item(81, 78, "좁아진 접근공간", "택배 상자가 문 앞 회전과 접근 공간을 좁힙니다.", "문 앞을 비워 휠체어가 정면 접근하고 방향 전환할 공간을 확보합니다.", "문 앞 공간은 문을 열고 몸을 조정하는 활동에 직접 필요합니다."),
+      item(60, 40, "높은 조작부", "인터폰과 조작부가 앉은 자세에서 손 닿기 어렵습니다.", "휠체어 사용자의 도달 범위 안에 낮은 조작부나 보조 버튼을 둡니다.", "조작부가 손 닿는 높이에 있어야 독립적인 출입이 가능합니다."),
+      item(49, 60, "문 여닫이 공간 부족", "문 앞 바닥 공간이 좁아 문을 열며 휠체어 위치를 조정하기 어렵습니다.", "문 앞 측면 여유 공간과 직선 접근 공간을 확보합니다.", "문 조작에는 단순 통과 폭뿐 아니라 여닫는 동안 머무를 공간이 필요합니다."),
+      item(38, 80, "바닥 레벨 변화", "문 앞 바닥 전환이 매끄럽지 않아 바퀴가 걸릴 수 있습니다.", "바닥 높이를 맞추고 미끄럽지 않은 연속 보행면으로 정리합니다.", "연속된 바닥면은 휠체어 추진력 손실과 걸림을 줄입니다.")
+    ],
+    house: [
+      item(56, 58, "계단 진입", "현관 앞 계단이 있어 휠체어로 독립 진입하기 어렵습니다.", "완만한 경사로 또는 리프트 등 무단차 접근을 마련합니다.", "계단은 휠체어 사용자에게 출입 자체를 막는 장벽이 됩니다."),
+      item(35, 78, "좁은 접근로", "대문에서 현관까지 길이 좁아 휠체어가 안정적으로 지나가기 어렵습니다.", "충분한 폭의 평탄한 접근로를 확보합니다.", "출입로 폭은 휠체어 추진과 보호자 보조 여부를 결정합니다."),
+      item(48, 80, "울퉁불퉁한 바닥", "불규칙한 포장면은 앞바퀴가 걸리거나 방향이 틀어질 수 있습니다.", "매끄러운 미끄럼 방지 포장면으로 바꿉니다.", "작은 바닥 요철도 휠체어 이동을 크게 방해할 수 있습니다."),
+      item(57, 40, "높은 문턱", "현관문 앞 문턱이 높아 마지막 진입 단계에서 바퀴가 멈출 수 있습니다.", "문턱을 낮추거나 경사 전환재를 설치합니다.", "실내로 들어가는 마지막 단차까지 제거되어야 실제 접근이 완성됩니다."),
+      item(72, 60, "회전공간 방해", "상자와 좁은 포치가 방향 전환 공간을 줄입니다.", "문 앞 물건을 치우고 회전 가능한 빈 공간을 만듭니다.", "휠체어는 문 앞에서 접근, 회전, 문 조작이 연속으로 일어나므로 여유 공간이 필요합니다.")
+    ]
+  }
 };
 
 function item(x, y, tag, hazard, solution, reason) {
@@ -3999,7 +4062,13 @@ function item(x, y, tag, hazard, solution, reason) {
 }
 
 function getExternalSpots() {
-  return externalSpotsByHouse[state.house] || externalSpotsByHouse.apartment;
+  return externalSpotsByProfile[state.profile]?.[state.house]
+    || externalSpotsByProfile.arthritis.apartment;
+}
+
+function getExternalScene(profileKey = state.profile, houseKey = state.house) {
+  return externalScenesByProfile[profileKey]?.[houseKey]
+    || externalScenesByProfile.arthritis.apartment;
 }
 
 const state = {
@@ -4031,7 +4100,8 @@ function preloadImage(src) {
 function preloadHouseImages(houseKey = state.house) {
   const house = houses[houseKey];
   if (!house) return;
-  [house.before, house.after, house.entryBefore, house.entryAfter].forEach(preloadImage);
+  const externalScene = getExternalScene(state.profile, houseKey);
+  [house.before, house.after, externalScene.before, externalScene.after].forEach(preloadImage);
 }
 
 function preloadProfileScenes(profileKey = state.profile) {
@@ -4046,7 +4116,7 @@ function preloadProfileScenes(profileKey = state.profile) {
 function preloadCoreImages() {
   preloadImage("title_hero_ot_home_modification.webp");
   Object.values(profiles).forEach(profile => preloadImage(profile.profileImage));
-  preloadImage(houses.apartment.entryBefore);
+  preloadImage(externalScenesByProfile.arthritis.apartment.before);
 }
 
 function show(id) {
@@ -4404,6 +4474,7 @@ function renderHouseChoices() {
 function selectProfile(key) {
   state.profile = key;
   preloadProfileScenes(key);
+  preloadHouseImages(state.house);
   renderProfileChoices();
   renderCounters();
 }
@@ -4421,12 +4492,12 @@ function renderExternal() {
   const found = state.found[state.profile].external;
   const spots = getExternalSpots();
   const stage = document.getElementById("externalStage");
-  const house = houses[state.house];
+  const scene = getExternalScene();
   stage.className = "stage" + (hasExternalAfterPreview() ? " after-view" : "");
   if (isCoordinateMode()) stage.classList.add("coord-mode");
   stage.style.backgroundImage = "";
   stage.innerHTML = "";
-  renderSceneLayers(stage, { before: house.entryBefore, after: house.entryAfter });
+  renderSceneLayers(stage, scene);
   spots.forEach((spot, index) => {
     const btn = document.createElement("button");
     btn.className = "spot" + (found.has(index) ? " found" : "");
